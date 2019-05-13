@@ -1,5 +1,11 @@
-.HomeScreen{
-background-size:contain;
-background-image: url('/Images/wallpaper1.jpg');
 
-}
+body {
+    margin: 0;
+    padding: 0;
+  
+    /** background image */
+    background-image:url('../Images/wallpaper9.jpg');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+  }
