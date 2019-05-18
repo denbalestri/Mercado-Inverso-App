@@ -1,11 +1,14 @@
 
 import React, { Component } from 'react';
-import { Button, Form, FormGroup, Label, Input, FormText,FormFeedback ,Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
+import { Button, Form, FormGroup,Alert, Label, Input, FormText,FormFeedback ,Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
 import {Link} from 'react-router-dom'
 import '../styles/style.css';
 import {getRols}  from './../request'
 import {GET_USER} from '../constants/Endpoints'
 import axios from 'axios'
+import firebase from './../firebase';
+import { functionTypeAnnotation } from '@babel/types';
+import validator from './../validator'
 class RegisterScreen extends Component{
 
 
@@ -16,7 +19,6 @@ class RegisterScreen extends Component{
         this.state = {
             //isLoading: false,
            form:{ 
-                  username: "",
                   last_name:"",
                   first_name:"",
                   rol:"",
@@ -33,6 +35,9 @@ class RegisterScreen extends Component{
        wrongPassword:false,
        modal: false,
        msg:'',
+       error:null,
+       errorMsg:''
+
         };
 
         this.handleRegisterClick = this.handleRegisterClick.bind(this);
@@ -41,16 +46,17 @@ class RegisterScreen extends Component{
         this.handleOnChangeEmail = this.handleOnChangeEmail.bind(this);
     }
 
-    handleRegisterClick () {
-      console.log(this.state.form)
-      if((this.state.form.password!==this.state.form.repeatpassword) && this.state.form.last_name=="" || this.state.form.first_name=="" || this.state.form.rol=="" ||
-      this.state.form.birthdate=="" || this.state.form.password=="" || this.state.form.repeatpassword=="" || this.state.form.username==""){
+    handleRegisterClick = () => {
+     
+      this.setState({error:null});
+      /*if((this.state.form.password!==this.state.form.repeatpassword) && this.state.form.last_name=="" || this.state.form.first_name=="" || this.state.form.rol=="" ||
+      this.state.form.birthdate=="" || this.state.form.password=="" || this.state.form.repeatpassword=="" ){
         this.setState({ wrongPassword: true });
         this.setState({ modal: true });
         this.setState({ msg: 'Must have all the complete fields'});
       }
       else if(this.state.form.last_name=="" || this.state.form.first_name=="" || this.state.form.rol=="" ||
-      this.state.form.birthdate=="" || this.state.form.password=="" || this.state.form.repeatpassword=="" || this.state.form.username=="")
+      this.state.form.birthdate=="" || this.state.form.password=="" || this.state.form.repeatpassword=="" )
       {
         this.setState({ modal: true });
         this.setState({ msg: 'Must have all the complete fields'});
@@ -59,26 +65,84 @@ class RegisterScreen extends Component{
       if(this.state.form.email==''){
         this.setState({ modal: true });
         this.setState({ msg: 'Email is wrong!'});
+      
       }
-      else{
+     if(this.state.form.password!==this.state.form.repeatpassword){
+      this.setState({ wrongPassword: false });
+      
+     }
+     else if(this.state.form.password.length<6 && this.state.form.password===this.state.form.repeatpassword){
+      this.setState({ modal: true });
+      this.setState({ msg: 'The password must be more than six characters'});
+     }*/
+     
             axios.post(GET_USER + 'create', this.state.form)
             .then(response => {
-                //console.log(response);
+             
                 if (Array.isArray(response.data) && response.data.length === 0) {
                     //this.setState({ isValid: false });
                     this.setState({ RegisterSuccess: false });
+                    //this.setState({msg:response.error})
                     
-                } else {    
-                    return this.props.history.push('/LoginScreen')
+                } else {
+                  console.log(this.state.form.email)
+                    firebase
+                    .auth()
+                    .createUserWithEmailAndPassword(this.state.form.email,this.state.form.password)
+                    .then(a=>
+                      firebase.auth().currentUser.sendEmailVerification().then(() =>
+                      {
+                       this.setState({msg:'confirmation email was sent'}).then(() => {
+                        //return this.props.history.push('/LoginScreen')
+                       })
+
+                      })
+                      )
+                    .catch(error=>{
+                      console.log(error)
+                      this.setState({error:error})
+                    })
+
+                    
+                     // return this.props.history.push('/LoginScreen')
+                    
+                    
+                  
+                 
                     
                 }
             })
             .catch(error => console.log("Error:", error));
 
-    }
+    
 
     }
 
+             
+    validateBeforeSubmit=(e)=>{
+      e.preventDefault();
+      if(!validator.min(this.state.form.password)){
+        
+          this.setState({ modal: true });
+          this.setState({ msg: 'The password must be more than six characters'});
+        return;
+        
+      }
+
+        Object.keys(this.state.form)
+        .map(key =>{
+
+            if(validator.Empty(this.state.form[key])) {
+              this.setState({ modal: true });
+              this.setState({ msg: 'Must have all the complete fields'});
+              return;
+            }
+          
+          })
+
+          this.state.handleRegisterClick();
+    }
+    
 
 
     componentWillMount(){
@@ -142,9 +206,12 @@ class RegisterScreen extends Component{
           <div className="container" >
           <div className="row" >
               <div className="col-12 " style={{display: 'flex', justifyContent: 'center',marginTop: "20%"}} >
-                   <div className="col-6">       
+                   <div className="col-4"> 
+                   <Alert color="success">
+                        {this.state.errorMsg}
+                      </Alert>
                       <Form style={{ textAlign: "center" }}>
-
+                      
                         <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
                                   <ModalHeader toggle={this.toggle}>Oups! something was wrong</ModalHeader>
                                   <ModalBody>
@@ -167,6 +234,7 @@ class RegisterScreen extends Component{
                                         placeholder="first name..."
                                         onChange={this.handleInputChange}
                                       />
+                                      
                                     </FormGroup>
                                     <FormGroup>
                                       <Label for="lastName">Last Name</Label>
@@ -186,14 +254,12 @@ class RegisterScreen extends Component{
                                                 
                                               />
                                             </FormGroup>
-                                    <FormGroup>
-                                      <Label for="UserName">Username</Label>
-                                      <Input
-                                      name="username"
-                                        onChange={this.handleInputChange}
-                                        placeholder="username..."
-                                      />
-                                    </FormGroup>
+
+                                    
+
+                               
+
+
                                     <FormGroup>
                                       <Label for="email">Email</Label>
                                       <Input
@@ -254,7 +320,8 @@ class RegisterScreen extends Component{
 
                                       
                                     </FormGroup>
-                                <Link className="btn btn-primary" onClick={this.handleRegisterClick}>Register</Link>
+                                   
+                                <Link className="btn btn-primary" onClick={this.validateBeforeSubmit}>Register</Link>
 
                               </Form>
                           </div>

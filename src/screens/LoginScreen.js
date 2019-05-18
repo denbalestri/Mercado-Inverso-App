@@ -6,7 +6,7 @@ import { Card, Button, CardImg, CardTitle, CardText, CardDeck,
 import {Link} from 'react-router-dom'
 import {GET_USER} from '../constants/Endpoints'
 import axios from 'axios'
-
+import firebase from './../firebase';
 
 class LoginScreen extends Component{
  
@@ -15,48 +15,58 @@ class LoginScreen extends Component{
         console.log(props)
         this.state = {
             //isLoading: false,
-            form: { username: "", password: "" },
+            form: { email: "", password: "" },
             isValid: true,
         };
 
         this.handleLoginClick = this.handleLoginClick.bind(this);
-        this.handleUsernameInput = this.handleUsernameInput.bind(this);
+        this.handleEmailInput = this.handleEmailInput.bind(this);
         this.handlePasswordInput = this.handlePasswordInput.bind(this);
     }
 
     handleLoginClick () {
     //CHEQUEAR QUE EXISTA EL USUARIO
-    
+        
+    firebase
+    .auth()
+    .signInWithEmailAndPassword(this.state.form.email,this.state.form.password)
+    .then(a=>
         axios.post(GET_USER + 'check', this.state.form)
-            .then(response => {
-                //console.log(response);
-                if (response.data === false) {
-                   
-                    this.setState({ isValid: false });
-                    
-                    
-                } else if(response.data.length!=0 && response.data.rol_id==1){    
-                 //   console.log(response.data)
-                    //comerciante
-                    return this.props.history.push('/HomeScreen')
-                    
-                }
-                else{
-                    //proveedor
-                    return this.props.history.push('/TenderScreen')
-                }
-            })
-            .catch(error => console.log("Error:", error));
+        .then(response => {
+            //console.log(response);
+            if (response.data === false) {
+               
+                this.setState({ isValid: false });
+                
+                
+            } else if(response.data.length!=0 && response.data.rol_id==1){    
+             //   console.log(response.data)
+                //comerciante
+                return this.props.history.push('/HomeScreen')
+                
+            }
+            else{
+                //proveedor
+                return this.props.history.push('/TenderScreen')
+            }
+        })
+        .catch(error => console.log("Error:", error))
+    )
+    .catch(error=>{
+      console.log(error)
+     
+    })
+        
     }
 
 
   
 
-    handleUsernameInput(e) {
+    handleEmailInput(e) {
         this.setState({
             form: {
                 ...this.state.form,
-                username: e.target.value
+                email: e.target.value
             }
         });
     }
@@ -83,10 +93,10 @@ class LoginScreen extends Component{
                  <div className="col-6">
                     <Form style={{ textAlign: "center" }}> 
                         <FormGroup>
-                            <Label for="username" >Username</Label>
-                            <Input onChange={this.handleUsernameInput}/>
+                            <Label for="username" >Email</Label>
+                            <Input onChange={this.handleEmailInput}/>
                             <FormFeedback></FormFeedback>
-                            <FormText>Write your username.</FormText>
+                            <FormText>Write your Email.</FormText>
                         </FormGroup>
 
                         <FormGroup style={{display: this.state.isValid ? 'block' : 'none' }}>
@@ -103,7 +113,7 @@ class LoginScreen extends Component{
                             <FormText>Please write again.</FormText>
                         </FormGroup>
                     <Link className="btn btn-primary" onClick={this.handleLoginClick}>Login</Link>{' '}
-                    
+                   
 
                     <Link className="btn btn-primary" to="/RegisterScreen">Sign up</Link>
                 </Form>
