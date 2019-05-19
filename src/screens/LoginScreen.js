@@ -8,7 +8,7 @@ import {GET_USER} from '../constants/Endpoints'
 import axios from 'axios'
 import firebase from './../firebase';
 import './../styles/style.css'
-import logo from './../Images/logo.png';
+import logo from './../Images/logo2.png';
 class LoginScreen extends Component{
  
     constructor(props) {
@@ -107,16 +107,16 @@ class LoginScreen extends Component{
     return(
 <div className="container" >
 
-<img src={logo} alt="Logo" style={{width: '250px'}} />
+
 <Alert color="danger" style={{display: this.state.wrong ? 'block' : 'none' ,}}>
                      {this.state.msgWrong}
                       </Alert>
         <div className="row" >
-        
-            <div className="col-12 " style={{display: 'flex', justifyContent: 'center',marginTop: "20%",}} >
+            
+            <div className="col-12 " style={{display: 'flex', justifyContent: 'center',marginTop: "10%",}} >
            
                  <div className="col-6" style={{backgroundColor:'white'}}>
-
+                 <img src={logo} alt="Logo" style={{width: '250px',margin:'0 auto',display:'block'}} />
                  
 
                     <Form style={{ textAlign: "center"}}> 
