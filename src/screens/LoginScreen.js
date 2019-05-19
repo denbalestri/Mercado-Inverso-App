@@ -64,7 +64,7 @@ class LoginScreen extends Component{
             }
             else{
                 this.setState({wrong:true})
-                this.setState({msgWrong:"Email wasn't verify,check your Inbox!"})
+                this.setState({msgWrong:"Email wasn't verified, check your Inbox!"})
                 this.setState({loading:false}) 
             }
             
