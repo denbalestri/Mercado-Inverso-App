@@ -4,10 +4,19 @@ body {
     padding: 0;
   
     /** background image */
-    background-image:url('../Images/wallpaper9.jpg');
+    background-image:url('../Images/food.jpg');
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover;
   }
+
+  #col-md-12{
+
+    border-radius: 62px 62px 62px 62px;
+    -moz-border-radius: 62px 62px 62px 62px;
+    -webkit-border-radius: 62px 62px 62px 62px;
+    border: 0px solid #1a1a1a; 
+  }
+
 
  

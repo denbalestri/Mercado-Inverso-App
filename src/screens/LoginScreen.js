@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 
-import { Form, FormGroup, Label, Input, FormFeedback, FormText } from 'reactstrap';
+import { Form, FormGroup, Label, Input, FormFeedback, FormText,Alert,Spinner } from 'reactstrap';
 import { Card, Button, CardImg, CardTitle, CardText, CardDeck,
     CardSubtitle, CardBody } from 'reactstrap';
 import {Link} from 'react-router-dom'
 import {GET_USER} from '../constants/Endpoints'
 import axios from 'axios'
 import firebase from './../firebase';
-
+import './../styles/style.css'
+import logo from './../Images/logo.png';
 class LoginScreen extends Component{
  
     constructor(props) {
@@ -17,6 +18,9 @@ class LoginScreen extends Component{
             //isLoading: false,
             form: { email: "", password: "" },
             isValid: true,
+            wrong:false,
+            msgWrong:'',
+            loading:false,
         };
 
         this.handleLoginClick = this.handleLoginClick.bind(this);
@@ -26,35 +30,49 @@ class LoginScreen extends Component{
 
     handleLoginClick () {
     //CHEQUEAR QUE EXISTA EL USUARIO
-        
+     this.setState({loading:true})   
     firebase
     .auth()
     .signInWithEmailAndPassword(this.state.form.email,this.state.form.password)
-    .then(a=>
-        axios.post(GET_USER + 'check', this.state.form)
-        .then(response => {
-            //console.log(response);
-            if (response.data === false) {
-               
-                this.setState({ isValid: false });
-                
-                
-            } else if(response.data.length!=0 && response.data.rol_id==1){    
-             //   console.log(response.data)
-                //comerciante
-                return this.props.history.push('/HomeScreen')
-                
+    .then(user=>{
+        
+        console.log(user)
+         if(user.user.emailVerified){
+
+            this.setState({loading:false}) 
+                axios.post(GET_USER + 'check', this.state.form)
+                .then(response => {
+                    //console.log(response);
+                    if (response.data === false) {
+                    
+                        this.setState({ isValid: false });
+                        
+                        
+                    } else if(response.data.length!=0 && response.data.rol_id==1){    
+                    //   console.log(response.data)
+                        //comerciante
+
+                        return this.props.history.push('/HomeScreen')
+                        
+                    }
+                    else{
+                        //proveedor
+                        return this.props.history.push('/TenderScreen')
+                    }
+                })
             }
             else{
-                //proveedor
-                return this.props.history.push('/TenderScreen')
+                this.setState({wrong:true})
+                this.setState({msgWrong:"Email wasn't verify,check your Inbox!"})
+                this.setState({loading:false}) 
             }
-        })
-        .catch(error => console.log("Error:", error))
-    )
+            
+     })
     .catch(error=>{
       console.log(error)
-     
+     this.setState({wrong:true})
+     this.setState({msgWrong:error.message})
+     this.setState({loading:false}) 
     })
         
     }
@@ -88,10 +106,20 @@ class LoginScreen extends Component{
     
     return(
 <div className="container" >
+
+<img src={logo} alt="Logo" style={{width: '250px'}} />
+<Alert color="danger" style={{display: this.state.wrong ? 'block' : 'none' ,}}>
+                     {this.state.msgWrong}
+                      </Alert>
         <div className="row" >
-            <div className="col-12 " style={{display: 'flex', justifyContent: 'center',marginTop: "20%"}} >
-                 <div className="col-6">
-                    <Form style={{ textAlign: "center" }}> 
+        
+            <div className="col-12 " style={{display: 'flex', justifyContent: 'center',marginTop: "20%",}} >
+           
+                 <div className="col-6" style={{backgroundColor:'white'}}>
+
+                 
+
+                    <Form style={{ textAlign: "center"}}> 
                         <FormGroup>
                             <Label for="username" >Email</Label>
                             <Input onChange={this.handleEmailInput}/>
@@ -112,12 +140,15 @@ class LoginScreen extends Component{
                             <FormFeedback>Oh noes! the password or username is wrong!</FormFeedback>
                             <FormText>Please write again.</FormText>
                         </FormGroup>
-                    <Link className="btn btn-primary" onClick={this.handleLoginClick}>Login</Link>{' '}
-                   
-
-                    <Link className="btn btn-primary" to="/RegisterScreen">Sign up</Link>
+                    
+                    
+                    <Link className="btn btn-primary" onClick={this.handleLoginClick} style={{display: this.state.loading ? 'none' : 'inline-block',width: '150px'}}>Login</Link>
+                    <Link className="btn btn-primary" to="/RegisterScreen" style={{display: this.state.loading ? 'none' : 'inline-block',marginLeft:'4%',width: '150px'}}>Sign up</Link>
+                    <Spinner  color="primary" style={{display: this.state.loading ? 'block' : 'none',margin:' 0 auto'}}/>
+                    
                 </Form>
              </div>
+             
          </div>
      </div>
   </div>

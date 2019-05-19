@@ -9,6 +9,7 @@ import axios from 'axios'
 import firebase from './../firebase';
 import { functionTypeAnnotation } from '@babel/types';
 import validator from './../validator'
+import './../styles/style.css'
 class RegisterScreen extends Component{
 
 
@@ -31,12 +32,14 @@ class RegisterScreen extends Component{
         },
        roles:[],
        isValid: true,
-       RegisterSuccess:true,
+       RegisterSuccess:false,
        wrongPassword:false,
+       okayPassword:false,
        modal: false,
        msg:'',
-       error:null,
-       errorMsg:''
+       error:'',
+       errorMsg:'',
+       msgconfirm:''
 
         };
 
@@ -44,67 +47,61 @@ class RegisterScreen extends Component{
         this.handleInputChange = this.handleInputChange.bind(this);
         this.toggle = this.toggle.bind(this);
         this.handleOnChangeEmail = this.handleOnChangeEmail.bind(this);
+        this.validateBeforeSubmit=this.validateBeforeSubmit.bind(this);
+        this.renderRedirect=this.renderRedirect.bind(this);
     }
 
     handleRegisterClick = () => {
-     
-      this.setState({error:null});
-      /*if((this.state.form.password!==this.state.form.repeatpassword) && this.state.form.last_name=="" || this.state.form.first_name=="" || this.state.form.rol=="" ||
-      this.state.form.birthdate=="" || this.state.form.password=="" || this.state.form.repeatpassword=="" ){
-        this.setState({ wrongPassword: true });
-        this.setState({ modal: true });
-        this.setState({ msg: 'Must have all the complete fields'});
-      }
-      else if(this.state.form.last_name=="" || this.state.form.first_name=="" || this.state.form.rol=="" ||
-      this.state.form.birthdate=="" || this.state.form.password=="" || this.state.form.repeatpassword=="" )
-      {
-        this.setState({ modal: true });
-        this.setState({ msg: 'Must have all the complete fields'});
-        
-      }
-      if(this.state.form.email==''){
-        this.setState({ modal: true });
-        this.setState({ msg: 'Email is wrong!'});
+     //console.log(this.state.form)
+      this.setState({error:''});
+      this.setState({wrongPassword:false})
       
-      }
-     if(this.state.form.password!==this.state.form.repeatpassword){
-      this.setState({ wrongPassword: false });
-      
-     }
-     else if(this.state.form.password.length<6 && this.state.form.password===this.state.form.repeatpassword){
-      this.setState({ modal: true });
-      this.setState({ msg: 'The password must be more than six characters'});
-     }*/
-     
             axios.post(GET_USER + 'create', this.state.form)
             .then(response => {
              
                 if (Array.isArray(response.data) && response.data.length === 0) {
                     //this.setState({ isValid: false });
                     this.setState({ RegisterSuccess: false });
+                    console.log(response.data)
                     //this.setState({msg:response.error})
                     
                 } else {
                   console.log(this.state.form.email)
                     firebase
                     .auth()
+                    
                     .createUserWithEmailAndPassword(this.state.form.email,this.state.form.password)
                     .then(a=>
-                      firebase.auth().currentUser.sendEmailVerification().then(() =>
-                      {
-                       this.setState({msg:'confirmation email was sent'}).then(() => {
-                        //return this.props.history.push('/LoginScreen')
-                       })
+                      firebase.auth().currentUser.sendEmailVerification()
+                      .then(() => {
+
+                       
+                        
+                            this.setState({RegisterSuccess:true})
+
+                              //return this.props.history.push('/')
+
+                            
+                          
+                            
+                           
+                           
+                              
+                        
+                      
+                       
 
                       })
                       )
                     .catch(error=>{
                       console.log(error)
-                      this.setState({error:error})
+                      this.setState({errorMsg:error.message})
+                      this.setState({isValid:false})
+                     
                     })
 
                     
-                     // return this.props.history.push('/LoginScreen')
+                    
                     
                     
                   
@@ -118,14 +115,58 @@ class RegisterScreen extends Component{
 
     }
 
+    renderRedirect = () => {
+      if (this.state.RegisterSuccess) {
+        return this.props.history.push('/')
+      }
+    }
+
              
     validateBeforeSubmit=(e)=>{
       e.preventDefault();
       if(!validator.min(this.state.form.password)){
+        this.setState({wrongPassword:true})
+         this.setState({
+           
+          form:{ 
+            ...this.state.form,
+          password:''}
+           })
+           this.setState({
+            
+            form:{ 
+              ...this.state.form,
+            repeatpassword:''}
+             })
+         this.setState({ msg: 'The password must be more than six characters'});
+         this.setState({ modal: true });
+         return;
+      }
+      else if(validator.min(this.state.form.password)){
+        this.setState({okayPassword: true });
+        this.setState({wrongPassword:false})
         
-          this.setState({ modal: true });
-          this.setState({ msg: 'The password must be more than six characters'});
+      }
+      if(!validator.Equals(this.state.form.password,this.state.form.repeatpassword)){
+        this.setState({ msg: 'The password must be more than six characters and the passwords are wrong!'});
+        this.setState({ modal: true });
+        this.setState({wrongPassword:true})
+        this.setState({
+          form:{
+            ...this.state.form,
+          password:''}
+           })
+           this.setState({
+             
+            form:{ 
+              ...this.state.form,
+            repeatpassword:''}
+             })
         return;
+      }
+      else if(validator.Equals(this.state.form.password,this.state.form.repeatpassword)){
+        this.setState({ okayPassword: true });
+        this.setState({wrongPassword:false})
         
       }
 
@@ -134,13 +175,14 @@ class RegisterScreen extends Component{
 
             if(validator.Empty(this.state.form[key])) {
               this.setState({ modal: true });
+              this.setState({wrongPassword:true})
               this.setState({ msg: 'Must have all the complete fields'});
               return;
             }
           
           })
-
-          this.state.handleRegisterClick();
+          
+          this.handleRegisterClick();
     }
     
 
@@ -202,16 +244,33 @@ class RegisterScreen extends Component{
     render(){
     
         return(
-
-          <div className="container" >
-          <div className="row" >
-              <div className="col-12 " style={{display: 'flex', justifyContent: 'center',marginTop: "20%"}} >
-                   <div className="col-4"> 
-                   <Alert color="success">
-                        {this.state.errorMsg}
+          
+    <div  className="container-register">
+          <Alert color="success" style={{display: this.state.RegisterSuccess ? 'block' : 'none' }}>
+                        <h4 className="alert-heading">Well done!</h4>
+                        <p>
+                          Aww yeah, It was successfully the register, we sent you a confirm email,
+                          please check in your Inbox!
+                        </p>
+                        <hr />
+                        <p className="mb-0">
+                          Thank you !
+                        </p>
                       </Alert>
-                      <Form style={{ textAlign: "center" }}>
-                      
+                      <Alert color="danger" style={{display: this.state.isValid ? 'none' : 'block' ,}}>
+                     {this.state.errorMsg}
+                      </Alert>
+    <div className="row" >
+                  
+        <div className="col-12" style={{display: 'flex', justifyContent: 'center',marginTop: "12%"}} >
+           
+                    
+              <div className="col-md-4" style={{ textAlign: "center" ,backgroundColor:'white'}}>
+                      <Form >
+                     
+                     
+
+
                         <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
                                   <ModalHeader toggle={this.toggle}>Oups! something was wrong</ModalHeader>
                                   <ModalBody>
@@ -224,7 +283,7 @@ class RegisterScreen extends Component{
                           </Modal>
 
 
-
+                         
                                     <FormGroup>
                                       <Label for="firstName">First Name</Label>
                                       <Input
@@ -255,51 +314,6 @@ class RegisterScreen extends Component{
                                               />
                                             </FormGroup>
 
-                                    
-
-                               
-
-
-                                    <FormGroup>
-                                      <Label for="email">Email</Label>
-                                      <Input
-                                        name="email"
-                                        onChange={this.handleOnChangeEmail}
-                                        placeholder="example@gmail.com..."
-                                      />
-                                    </FormGroup>
-
-                                    <FormGroup 
-                                    style={{display: this.state.wrongPassword ? 'none' : 'block' }}>
-                                      <Label for="password">Password</Label>
-                                      <Input
-                                        type="password"
-                                        name="password"
-                                        
-                                        onChange={this.handleInputChange}
-                                        placeholder="password..."
-                                      />
-                                    </FormGroup>
-
-                                    <FormGroup  style={{display: this.state.wrongPassword ? 'block' : 'none' }}>
-                                              <Label for="invalidPassword" >Invalid password</Label>
-                                              <Input type="password"   className="passwordIncorrect" name="password" invalid onChange={this.handleInputChange}/>
-                                              <FormFeedback>Oh noes! the password is wrong!</FormFeedback>
-                                              <FormText>Please write again.</FormText>
-                                    </FormGroup> 
-
-                                    <FormGroup>
-                                      <Label for="passwordRepeat">Repeat Password</Label>
-                                      <Input
-                                        type="password"
-                                        name="repeatpassword"
-                                        onChange={this.handleInputChange}
-                                        placeholder="password..."
-                                      />
-                                    </FormGroup>
-
-
-
 
                                     <FormGroup>
                                       <Label for="select">Rol</Label>
@@ -313,18 +327,81 @@ class RegisterScreen extends Component{
                                       }
                                     
                                     );      
-                                          
-                                      
-                                        
                                       </Input>
-
-                                      
                                     </FormGroup>
-                                   
-                                <Link className="btn btn-primary" onClick={this.validateBeforeSubmit}>Register</Link>
+                            
+                            </Form>
+                            </div>
+                            <div className="col-4" style={{ textAlign: "center" ,backgroundColor:'white'}}> 
+                           <Form >
+                           
+                               
 
-                              </Form>
+
+                                    <FormGroup>
+                                      <Label for="email">Email</Label>
+                                      <Input
+                                        name="email"
+                                        onChange={this.handleOnChangeEmail}
+                                        placeholder="example@gmail.com..."
+                                      />
+                                    </FormGroup>
+
+                                    <FormGroup 
+                                    style={{display: this.state.wrongPassword ? 'none' : 'block' }} >
+                                      <Label for="password">Password</Label>
+                                      <Input
+                                        type="password"
+                                        name="password"
+                                        value={this.state.form.password}
+                                        onChange={this.handleInputChange}
+                                        placeholder="password..."
+                                      />
+                                    </FormGroup>
+
+                                    <FormGroup 
+                                    style={{display: this.state.okayPassword ? 'block' : 'none' }} >
+                                    <Label for="password">Repeat Password</Label>
+                                    <Input valid 
+                                       type="password"
+                                        name="password"
+                                        value={this.state.form.repeatpassword}
+                                        onChange={this.handleInputChange}
+                                        placeholder="password..."
+                                    />
+                                   <FormFeedback valid> that password is correct!</FormFeedback>
+                                   </FormGroup>
+
+
+
+
+                                    <FormGroup  style={{display: this.state.wrongPassword ? 'block' : 'none' }}>
+                                              <Label for="invalidPassword" >Invalid password</Label>
+                                              <Input type="password" value={this.state.form.password} className="passwordIncorrect" name="password" invalid onChange={this.handleInputChange}/>
+                                              <FormFeedback>Oh noes! the password is wrong!</FormFeedback>
+                                              <FormText>Please write again.</FormText>
+                                    </FormGroup> 
+
+                                    <FormGroup style={{display: this.state.okayPassword ? 'none' : 'block' }}>
+                                      <Label for="passwordRepeat">Repeat Password</Label>
+                                      <Input
+                                        type="password"
+                                        name="repeatpassword"
+                                        onChange={this.handleInputChange}
+                                        placeholder="password..."
+                                      />
+                                    </FormGroup>
+
+
+
+
+                                   
+                                    <div ><Link className="btn btn-primary"  onClick={this.validateBeforeSubmit}>Register</Link></div>       
+                             
+                          </Form>
                           </div>
+                          
+                          
                         </div>
 
                         </div>
