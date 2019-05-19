@@ -9,11 +9,12 @@ import axios from 'axios'
 import firebase from './../firebase';
 import './../styles/style.css'
 import logo from './../Images/logo2.png';
+import {connect} from "react-redux";
 class LoginScreen extends Component{
  
     constructor(props) {
         super(props);
-        console.log(props)
+        
         this.state = {
             //isLoading: false,
             form: { email: "", password: "" },
@@ -51,7 +52,7 @@ class LoginScreen extends Component{
                     } else if(response.data.length!=0 && response.data.rol_id==1){    
                     //   console.log(response.data)
                         //comerciante
-
+                        this.props.AddUser(response.data);
                         return this.props.history.push('/HomeScreen')
                         
                     }
@@ -98,6 +99,9 @@ class LoginScreen extends Component{
             }
     });
 }
+
+
+
 
   
 
@@ -163,8 +167,18 @@ class LoginScreen extends Component{
     
     }
 
+
+   
+    
+    let mapDispatchToProps = (dispatch) => {
+        return {
+            AddUser: (data) => {
+                dispatch({type: 'FETCH_USER', payload: data})
+            }
+        }
+    }
     
 
   
     
-    export default LoginScreen;
+    export default connect(null,mapDispatchToProps)(LoginScreen);

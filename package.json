@@ -6,12 +6,15 @@
     "axios": "^0.18.0",
     "bootstrap": "^4.3.1",
     "firebase": "^6.0.2",
+    "immutable": "^4.0.0-rc.12",
     "nodemailer": "^6.1.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-redux": "^7.0.3",
     "react-router-dom": "^5.0.0",
     "react-scripts": "3.0.0",
-    "reactstrap": "^8.0.0"
+    "reactstrap": "^8.0.0",
+    "redux": "^4.0.1"
   },
   "scripts": {
     "start": "set PORT=4000 && react-scripts start",

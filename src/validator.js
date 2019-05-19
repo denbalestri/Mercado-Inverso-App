@@ -7,10 +7,13 @@ function min(a,x=6){
 function max(a,x=6){
     return a.length<=x
 }
+function maxPrice(a,x=999999){
+    return a<=x
+}
 function Empty(a){
     return a.length===0
 }
 module.exports={
 
-Equals,min,max,Empty
+Equals,min,max,Empty,maxPrice
 }
