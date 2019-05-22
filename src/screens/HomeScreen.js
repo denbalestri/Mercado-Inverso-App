@@ -56,20 +56,19 @@ class HomeScreen extends Component{
               <NavItem>
                 <NavLink
                  to="/PostScreen"
-                 activeStyle={{
-                
-                  
-                
-                
-                }}
+               style={{marginRight:'20px',color:'grey',lineHeight: '45px'}}
                 
                 >Post Product</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink to="">Offers</NavLink>
+                <NavLink 
+                style={{marginRight:'20px',color:'grey',lineHeight: '45px'}}
+                to="">Offers</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink to="">Profile</NavLink>
+                <NavLink 
+                style={{marginRight:'20px',color:'grey',lineHeight: '45px'}}
+                to="">Profile</NavLink>
               </NavItem>
               <UncontrolledDropdown nav inNavbar>
                 <DropdownToggle nav caret>
