@@ -11,9 +11,12 @@ function maxPrice(a,x=999999){
     return a<=x
 }
 function Empty(a){
-    return a.length===0
+    return a.length===0 || a==="" 
+}
+function EmptyFields(a){
+    return a===""
 }
 module.exports={
 
-Equals,min,max,Empty,maxPrice
+Equals,min,max,Empty,maxPrice,EmptyFields
 }

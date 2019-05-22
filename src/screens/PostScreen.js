@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 
-import { Button, Form, FormGroup, Label, Input, FormText,Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
+import { Button, Form, FormGroup, Label, Input, FormText,Modal, ModalHeader, ModalBody, ModalFooter,Alert,UncontrolledAlert} from 'reactstrap';
 
 import {Link} from 'react-router-dom'
-
+import {GET_POST} from '../constants/Endpoints'
 import axios from 'axios'
 import './../styles/style.css';
 import HomeScreen from './HomeScreen'
@@ -11,6 +11,13 @@ import {getCategories}  from './../request'
 import validator from './../validator'
 import {connect} from "react-redux";
 
+import './../styles/style.css'
+
+const styles = {
+    fontFamily: 'sans-serif',
+    textAlign: 'center',
+    display: 'flex',
+  };
 class PostScreen extends Component{
     constructor(props) {
         super(props);
@@ -24,13 +31,16 @@ class PostScreen extends Component{
                  category:"",
                  user_id:"",
                  description:"",
-                 image:""
+                 image:''
                 
                 },
             msg: '',
             modal:false,
             loading:false,
             category:[],
+            postValid:true,
+            error:true,
+            success:''
             
         };
         this.toggle = this.toggle.bind(this);
@@ -40,9 +50,34 @@ class PostScreen extends Component{
     }
 
     handlePostClick= () => {
+        console.log('aca post click')
        
+       
+       
+
+        axios.post(GET_POST + 'createPost', this.state.form)
+        .then(response => {
+            if (Array.isArray(response.data) && response.data.length === 0) {
+              
+              
+              this.setState({ error: true });
+              this.setState({ modal: true });
+              this.setState({ msg: 'Could not save the data please try again'});
+            }
+            else{
+              this.setState({ success: true });
+              this.setState({ msg: 'The data could be saved!'}); 
+              
+              console.log(response.data)
+            }
+            
+
+        })
+        .catch(error => console.log("Error:", error));
+
     }
     
+   
 
     handleInputChange=(event)=>{
         const target = event.target;
@@ -59,47 +94,81 @@ class PostScreen extends Component{
   
       }
 
-     
-
+   handleFile=(event)=>{
+       
+       this.setState({
+           form:{
+               ...this.state.form,
+              image:event.target.files[0]
+           }
+       })
+  
+   }
 
 
       validateBeforeSubmit=(e)=>{
+          
         e.preventDefault();
 
-        console.log(this.props)
-        console.log(this.state.form)
-
+        
+      this.setState({ error: false });
+      
+       console.log(this.props.user.user_id)
+       console.log(this.state.form)
         if(!validator.maxPrice(this.state.form.price)){
             this.setState({ modal: true });
             this.setState({ msg: "The price shouldn't be more than 999999"});
-            return;
+            this.setState({ error: true });
+            console.log('max price')
+            
         }
+
         Object.keys(this.state.form)
+        
         .map(key =>{
 
-            if(validator.Empty(this.state.form[key]) && this.state.form[key]!=='image') {
+            if(validator.EmptyFields(this.state.form[key])) {
+             
+              this.setState({ error: true });
               this.setState({ modal: true });
               this.setState({ msg: 'Must have all the complete fields'});
-              return;
+              console.log('error empty')
+              console.log(this.state.error)
+              
             }
+            
           
           })
+
+         
+          
+        if(this.state.error===false){
           this.handlePostClick();
+        } 
       }
 
 
 
     componentWillMount(){
         getCategories(this.props.match.params.id)
-        .then(response=>this.setState({category:response.data}))
-  
-      }
+        .then(response=>this.setState({category:response.data})).then(data=>{
+          this.setState({
+            form: {
+              ...this.state.form,
+              user_id: this.props.user.user_id,
+            }
+        })
+        })
+      
+       
+  }
        
     toggle() {
         this.setState(prevState => ({
           modal: !prevState.modal
         }));
       }
+      
 
 
     render(){
@@ -107,10 +176,16 @@ class PostScreen extends Component{
         return(
     <div  className="container-post">
     <HomeScreen />
+ 
         <div className="row" >
+        <UncontrolledAlert color="success" style={{margin:'0 auto',width:'75%',display: this.state.success ? 'block' : 'none'}}>
+                   {this.state.msg}
+              </UncontrolledAlert>
             <div className="col-12" style={{display: 'flex', justifyContent: 'center',marginTop: "12%"}} >
+              
                  <div className="col-md-4" style={{ textAlign: "center" ,backgroundColor:'white'}}>
-                
+               
+               
 
 
 
@@ -146,18 +221,15 @@ class PostScreen extends Component{
                     onChange={this.handleInputChange} />
                     </FormGroup>
                     
-                   
-                    
                     <FormGroup>
-                    <Label for="image">Image</Label>
-                    <Input type="file"
-                     name="image"
-                      id="image"
-                      onChange={this.handleInputChange} />
-                    <FormText color="muted">
-                       Upload a image.
-                    </FormText>
-                    </FormGroup>
+                        <Label for="exampleFile">File</Label>
+                        <Input type="file" name="image" onChange={this.handleFile}/>
+                        <FormText color="muted">
+                        </FormText>
+                        </FormGroup>
+                  
+                   
+                
                    
                    
                 </Form>
@@ -177,11 +249,12 @@ class PostScreen extends Component{
                         <Label for="exampleSelect">Category</Label>
                         <Input type="select"
                          name="category"
-                         onChange={this.handleInputChange} >
+                         onChange={this.handleInputChange}
+                         value={this.state.form.category} >
                         <option value={0} key={0} defaultValue>Choose a category</option>
                                       {this.state.category.map((p,i)=>{
                                                 return (
-                                                <option value={p.id} key={i}>{p.description}</option>
+                                                <option value={p.idCategory} key={i}>{p.description}</option>
                                                 )
                                               })
                                       }
@@ -221,12 +294,13 @@ class PostScreen extends Component{
 
 
 
-let mapStateToProps = (state) => {
-   console.log(state)
+let mapStateToProps = state => {
+  console.log(state)
     return {
-        user: state.user,
+        user: state.user
       
     }
 }
+
 
 export default connect(mapStateToProps)(PostScreen);

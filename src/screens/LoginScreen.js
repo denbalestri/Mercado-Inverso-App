@@ -10,6 +10,7 @@ import firebase from './../firebase';
 import './../styles/style.css'
 import logo from './../Images/logo2.png';
 import {connect} from "react-redux";
+
 class LoginScreen extends Component{
  
     constructor(props) {
@@ -37,7 +38,7 @@ class LoginScreen extends Component{
     .signInWithEmailAndPassword(this.state.form.email,this.state.form.password)
     .then(user=>{
         
-        console.log(user)
+        //console.log(user)
          if(user.user.emailVerified){
 
             this.setState({loading:false}) 
@@ -53,6 +54,8 @@ class LoginScreen extends Component{
                     //   console.log(response.data)
                         //comerciante
                         this.props.AddUser(response.data);
+                        
+                        
                         return this.props.history.push('/HomeScreen')
                         
                     }
@@ -82,12 +85,14 @@ class LoginScreen extends Component{
   
 
     handleEmailInput(e) {
+        
         this.setState({
             form: {
                 ...this.state.form,
                 email: e.target.value
             }
         });
+       
     }
 
     handlePasswordInput(e) {
@@ -177,6 +182,8 @@ class LoginScreen extends Component{
             }
         }
     }
+
+
     
 
   

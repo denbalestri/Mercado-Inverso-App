@@ -5,32 +5,39 @@ import '../src/styles/style.css'
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import 'bootstrap/dist/css/bootstrap.css';
-import {createStore, applyMiddleware} from 'redux'
+import {createStore} from 'redux'
 import {Provider} from 'react-redux'
-import {loadState, saveState} from './../src/components/storeconfig'
-let initialState = loadState() || {
+
+
+
+let initialData =  {
     appTitle: 'Mercado Inverso',
     user: {},
+
    
 }
 
-let store = createStore(function (state = initialState, action) {
+
+
+let store = createStore(function (state = initialData, action) {
     if (action.type === 'FETCH_USER') {
         state = {
             ...state,
             user: action.payload
         }
+        if (action.type === 'PRUEBA') {
+        }
+        //console.log(action.payload)
         console.log(state)
        
     }
-
+   
     return state
 })
 
-store.subscribe( function () {
-    saveState(store.getState())
-    
-  })
+window.store = store;
+
+
 
 ReactDOM.render(<Provider store={store}><App/></Provider>, document.getElementById('root'));
 

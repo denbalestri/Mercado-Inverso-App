@@ -37,7 +37,7 @@ class RegisterScreen extends Component{
        okayPassword:false,
        modal: false,
        msg:'',
-       error:'',
+       error:true,
        errorMsg:'',
        msgconfirm:''
 
@@ -55,7 +55,7 @@ class RegisterScreen extends Component{
      //console.log(this.state.form)
       this.setState({error:''});
       this.setState({wrongPassword:false})
-      
+           console.log('entre a registrer click')
             axios.post(GET_USER + 'create', this.state.form)
             .then(response => {
              
@@ -75,22 +75,9 @@ class RegisterScreen extends Component{
                       firebase.auth().currentUser.sendEmailVerification()
                       .then(() => {
 
-                       
-                        
                             this.setState({RegisterSuccess:true})
 
                               //return this.props.history.push('/')
-
-                            
-                          
-                            
-                           
-                           
-                              
-                        
-                      
-                       
-
                       })
                       )
                     .catch(error=>{
@@ -99,12 +86,6 @@ class RegisterScreen extends Component{
                       this.setState({isValid:false})
                      
                     })
-
-                    
-                    
-                    
-                    
-                  
                  
                     
                 }
@@ -124,8 +105,11 @@ class RegisterScreen extends Component{
              
     validateBeforeSubmit=(e)=>{
       e.preventDefault();
+     // console.log(this.state.form)
+      
+      this.setState({error:false})
       if(!validator.min(this.state.form.password)){
-        this.setState({wrongPassword:true})
+        
          this.setState({
            
           form:{ 
@@ -140,17 +124,16 @@ class RegisterScreen extends Component{
              })
          this.setState({ msg: 'The password must be more than six characters'});
          this.setState({ modal: true });
+         this.setState({ error: true });
+         this.setState({wrongPassword:true})
+         this.setState({ okayPassword: false });
+         console.log('menor clave')
+        
          return;
       }
-      else if(validator.min(this.state.form.password)){
-        this.setState({okayPassword: true });
-        this.setState({wrongPassword:false})
-        
-      }
+     
       if(!validator.Equals(this.state.form.password,this.state.form.repeatpassword)){
-        this.setState({ msg: 'The password must be more than six characters and the passwords are wrong!'});
-        this.setState({ modal: true });
-        this.setState({wrongPassword:true})
+     
         this.setState({
           form:{
             ...this.state.form,
@@ -162,27 +145,44 @@ class RegisterScreen extends Component{
               ...this.state.form,
             repeatpassword:''}
              })
-        return;
+             this.setState({ msg: 'The password must be more than six characters and the passwords are wrong!'});
+             this.setState({ modal: true });
+             this.setState({wrongPassword:true})
+             this.setState({ okayPassword: false });
+             this.setState({ error: true });
+             console.log('no son iguales')
+             return;
       }
-      else if(validator.Equals(this.state.form.password,this.state.form.repeatpassword)){
+     else if(validator.Equals(this.state.form.password,this.state.form.repeatpassword) && validator.min(this.state.form.password)){
         this.setState({ okayPassword: true });
         this.setState({wrongPassword:false})
         
       }
+     if(this.state.form.email===''){
+      this.setState({ error: true });
+      this.setState({ msg: 'The Email is invalid!'});
+      this.setState({ modal: true });
+
+     }
 
         Object.keys(this.state.form)
         .map(key =>{
 
             if(validator.Empty(this.state.form[key])) {
               this.setState({ modal: true });
-              this.setState({wrongPassword:true})
+             
               this.setState({ msg: 'Must have all the complete fields'});
-              return;
+              this.setState({ error: true });
+              console.log('entre al map')
+              console.log(this.state.error)
+             
             }
           
           })
-          
+          console.log(this.state.error)
+         if(this.state.error===false){
           this.handleRegisterClick();
+         } 
     }
     
 
@@ -229,10 +229,12 @@ class RegisterScreen extends Component{
               email: e.target.value
           }
       });
+    
           // this is a valid email address
           // call setState({email: email}) to update the email
           // or update the data in redux store.
       }
+     
       
   
   }

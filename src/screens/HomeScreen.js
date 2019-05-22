@@ -6,13 +6,13 @@ import { Collapse,
   NavbarBrand,
   Nav,
   NavItem,
-  NavLink,
   UncontrolledDropdown,
   DropdownToggle,
   DropdownMenu,
   DropdownItem} from 'reactstrap';
 
-import {Link} from 'react-router-dom'
+import {Link,NavLink} from 'react-router-dom'
+
 
 import axios from 'axios'
 import './../styles/style.css';
@@ -30,12 +30,16 @@ class HomeScreen extends Component{
     this.state = {
       isOpen: false
     };
+   
   }
   toggle() {
     this.setState({
       isOpen: !this.state.isOpen
     });
   }
+  
+
+  
     render(){
     
         return(
@@ -50,13 +54,22 @@ class HomeScreen extends Component{
           <Collapse isOpen={this.state.isOpen} navbar>
             <Nav className="ml-auto" navbar>
               <NavItem>
-                <NavLink href="/PostScreen">Post Product</NavLink>
+                <NavLink
+                 to="/PostScreen"
+                 activeStyle={{
+                
+                  
+                
+                
+                }}
+                
+                >Post Product</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink href={OfferScreen}>Offers</NavLink>
+                <NavLink to="">Offers</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink href="">Profile</NavLink>
+                <NavLink to="">Profile</NavLink>
               </NavItem>
               <UncontrolledDropdown nav inNavbar>
                 <DropdownToggle nav caret>
@@ -89,6 +102,14 @@ class HomeScreen extends Component{
 
 }
 
+let mapStateToProps = state => {
+  console.log(state)
+   return {
+       user: state.user
+     
+   }
+}
 
-export default HomeScreen;
+
+export default connect(mapStateToProps)(HomeScreen);
 

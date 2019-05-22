@@ -13,16 +13,17 @@ function App() {
   return (
    
      //ALL SCREENS 
-     <div>
+    
+     
       <Router>
-      
     <Route path="/" exact component={LoginScreen}/>
     <Route path="/RegisterScreen" component={RegisterScreen}/>
     <Route path="/HomeScreen" component={HomeScreen}/>
     <Route path="/TenderScreen" component={TenderScreen}/>
     <Route path="/PostScreen" component={PostScreen}/>
     </Router>
-    </div>
+   
+   
          
      
    
