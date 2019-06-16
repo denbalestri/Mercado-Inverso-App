@@ -21,7 +21,7 @@ import OfferScreen from './MakeOfferScreen'
 import {connect} from "react-redux";
 import logo from './../Images/logo2.png';
 
-class HomeScreen extends Component{
+class SupplierHomeScreen extends Component{
 
   constructor(props) {
     super(props);
@@ -53,22 +53,16 @@ class HomeScreen extends Component{
           <NavbarToggler onClick={this.toggle} />
           <Collapse isOpen={this.state.isOpen} navbar>
             <Nav className="ml-auto" navbar>
+              
               <NavItem>
-                <NavLink
-                 to="/PostScreen"
-               style={{marginRight:'20px',color:'grey',lineHeight: '45px'}}
-                
-                >Post Product</NavLink>
+                <NavLink 
+                style={{marginRight:'20px',color:'grey',lineHeight: '45px'}}
+                to="/ListPostScreen">Posts</NavLink>
               </NavItem>
               <NavItem>
                 <NavLink 
                 style={{marginRight:'20px',color:'grey',lineHeight: '45px'}}
-                to="">Offers</NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink 
-                style={{marginRight:'20px',color:'grey',lineHeight: '45px'}}
-                to="">Profile</NavLink>
+                to="/ListPostScreen">Offers</NavLink>
               </NavItem>
               <UncontrolledDropdown nav inNavbar>
                 <DropdownToggle nav caret>
@@ -110,5 +104,4 @@ let mapStateToProps = state => {
 }
 
 
-export default connect(mapStateToProps)(HomeScreen);
-
+export default connect(mapStateToProps)(SupplierHomeScreen);

@@ -31,7 +31,7 @@ class PostScreen extends Component{
                  category:"",
                  user_id:"",
                  description:"",
-                 image:''
+                 
                 
                 },
             msg: '',
@@ -52,9 +52,6 @@ class PostScreen extends Component{
     handlePostClick= () => {
         console.log('aca post click')
        
-       
-       
-
         axios.post(GET_POST + 'createPost', this.state.form)
         .then(response => {
             if (Array.isArray(response.data) && response.data.length === 0) {
@@ -94,16 +91,7 @@ class PostScreen extends Component{
   
       }
 
-   handleFile=(event)=>{
-       
-       this.setState({
-           form:{
-               ...this.state.form,
-              image:event.target.files[0]
-           }
-       })
   
-   }
 
 
       validateBeforeSubmit=(e)=>{
@@ -221,12 +209,7 @@ class PostScreen extends Component{
                     onChange={this.handleInputChange} />
                     </FormGroup>
                     
-                    <FormGroup>
-                        <Label for="exampleFile">File</Label>
-                        <Input type="file" name="image" onChange={this.handleFile}/>
-                        <FormText color="muted">
-                        </FormText>
-                        </FormGroup>
+                
                   
                    
                 

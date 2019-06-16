@@ -61,7 +61,8 @@ class LoginScreen extends Component{
                     }
                     else{
                         //proveedor
-                        return this.props.history.push('/TenderScreen')
+                        this.props.AddUser(response.data);
+                        return this.props.history.push('/SupplierHomeScreen')
                     }
                 })
             }

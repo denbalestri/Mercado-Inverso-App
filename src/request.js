@@ -4,7 +4,8 @@ const axios=require('axios');
 const endpoints={
     post:'http://localhost:3001/posts',
     rols:'http://localhost:3001/rols',
-    category:'http:///localhost:3001/category'
+    category:'http:///localhost:3001/category',
+    pickupzone:'http:///localhost:3001/pickupzone'
 }
 
 
@@ -18,10 +19,18 @@ function getCategories(){
 
     return axios.get(endpoints.category)
 }
+function getPosts(){
+    return axios.get(endpoints.post)
+}
+function getPickupZone(){
+    return axios.get(endpoints.pickupzone)
+
+
+}
 
 module.exports={
 
-    getRols,getCategories
+    getRols,getCategories,getPosts,getPickupZone
 }
 
 

@@ -37,7 +37,7 @@ class RegisterScreen extends Component{
        okayPassword:false,
        modal: false,
        msg:'',
-       error:true,
+       error:false,
        errorMsg:'',
        msgconfirm:''
 
@@ -77,7 +77,7 @@ class RegisterScreen extends Component{
 
                             this.setState({RegisterSuccess:true})
 
-                              //return this.props.history.push('/')
+                            //return this.props.history.push('/')
                       })
                       )
                     .catch(error=>{
@@ -107,7 +107,7 @@ class RegisterScreen extends Component{
       e.preventDefault();
      // console.log(this.state.form)
       
-      this.setState({error:false})
+     
       if(!validator.min(this.state.form.password)){
         
          this.setState({
@@ -153,16 +153,19 @@ class RegisterScreen extends Component{
              console.log('no son iguales')
              return;
       }
-     else if(validator.Equals(this.state.form.password,this.state.form.repeatpassword) && validator.min(this.state.form.password)){
+     else if(validator.Equals(this.state.form.password,this.state.form.repeatpassword) && !validator.min(this.state.form.password)){
         this.setState({ okayPassword: true });
         this.setState({wrongPassword:false})
-        
+        console.log('wrong')
+        console.log(this.state.form)
+        return;
       }
      if(this.state.form.email===''){
       this.setState({ error: true });
       this.setState({ msg: 'The Email is invalid!'});
       this.setState({ modal: true });
-
+      console.log('wrong email')
+      return;
      }
 
         Object.keys(this.state.form)
@@ -177,10 +180,14 @@ class RegisterScreen extends Component{
               console.log(this.state.error)
              
             }
-          
+
           })
+
+          this.setState({error:false})
+         
           console.log(this.state.error)
          if(this.state.error===false){
+           console.log('acahandleclickregistrer');
           this.handleRegisterClick();
          } 
     }

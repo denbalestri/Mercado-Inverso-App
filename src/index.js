@@ -13,6 +13,7 @@ import {Provider} from 'react-redux'
 let initialData =  {
     appTitle: 'Mercado Inverso',
     user: {},
+    post:{},
 
    
 }
@@ -25,12 +26,17 @@ let store = createStore(function (state = initialData, action) {
             ...state,
             user: action.payload
         }
-        if (action.type === 'PRUEBA') {
+    }
+        if (action.type === 'SET_POST_ID') {
+            state = {
+                ...state,
+                post: action.payload
+            }
         }
         //console.log(action.payload)
         console.log(state)
        
-    }
+    
    
     return state
 })
