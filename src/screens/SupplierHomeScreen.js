@@ -62,7 +62,7 @@ class SupplierHomeScreen extends Component{
               <NavItem>
                 <NavLink 
                 style={{marginRight:'20px',color:'grey',lineHeight: '45px'}}
-                to="/ListPostScreen">Offers</NavLink>
+                to="/OwnOffersScreen">Offers</NavLink>
               </NavItem>
               <UncontrolledDropdown nav inNavbar>
                 <DropdownToggle nav caret>
