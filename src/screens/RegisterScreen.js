@@ -55,7 +55,7 @@ class RegisterScreen extends Component{
      //console.log(this.state.form)
       this.setState({error:''});
       this.setState({wrongPassword:false})
-           console.log('entre a registrer click')
+          
             axios.post(GET_USER + 'create', this.state.form)
             .then(response => {
              
@@ -66,7 +66,7 @@ class RegisterScreen extends Component{
                     //this.setState({msg:response.error})
                     
                 } else {
-                  console.log(this.state.form.email)
+                 
                     firebase
                     .auth()
                     
@@ -81,7 +81,7 @@ class RegisterScreen extends Component{
                       })
                       )
                     .catch(error=>{
-                      console.log(error)
+                      
                       this.setState({errorMsg:error.message})
                       this.setState({isValid:false})
                      
@@ -127,7 +127,7 @@ class RegisterScreen extends Component{
          this.setState({ error: true });
          this.setState({wrongPassword:true})
          this.setState({ okayPassword: false });
-         console.log('menor clave')
+         
         
          return;
       }
@@ -150,21 +150,20 @@ class RegisterScreen extends Component{
              this.setState({wrongPassword:true})
              this.setState({ okayPassword: false });
              this.setState({ error: true });
-             console.log('no son iguales')
+             
              return;
       }
      else if(validator.Equals(this.state.form.password,this.state.form.repeatpassword) && !validator.min(this.state.form.password)){
         this.setState({ okayPassword: true });
         this.setState({wrongPassword:false})
-        console.log('wrong')
-        console.log(this.state.form)
+      
         return;
       }
      if(this.state.form.email===''){
       this.setState({ error: true });
       this.setState({ msg: 'The Email is invalid!'});
       this.setState({ modal: true });
-      console.log('wrong email')
+  
       return;
      }
 
@@ -176,8 +175,7 @@ class RegisterScreen extends Component{
              
               this.setState({ msg: 'Must have all the complete fields'});
               this.setState({ error: true });
-              console.log('entre al map')
-              console.log(this.state.error)
+              
              
             }
 
@@ -185,9 +183,9 @@ class RegisterScreen extends Component{
 
           this.setState({error:false})
          
-          console.log(this.state.error)
+        
          if(this.state.error===false){
-           console.log('acahandleclickregistrer');
+          
           this.handleRegisterClick();
          } 
     }

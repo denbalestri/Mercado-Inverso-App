@@ -74,7 +74,7 @@ class LoginScreen extends Component{
             
      })
     .catch(error=>{
-      console.log(error)
+     
      this.setState({wrong:true})
      this.setState({msgWrong:error.message})
      this.setState({loading:false}) 

@@ -1,37 +1,37 @@
 import React, { Component } from 'react';
 
 import { Button, Card, CardImg, CardTitle, CardText, CardGroup,
-    CardSubtitle, CardBody,ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem,Alert} from 'reactstrap';
+    CardSubtitle, CardBody, Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
 
 import {Link} from 'react-router-dom'
 
 import axios from 'axios'
 import './../styles/style.css';
-import SupplierHomeScreen from './SupplierHomeScreen'
-import {getOffers}  from './../request'
+import HomeScreen from './HomeScreen'
+import {getPostOffers}  from './../request'
 
 import validator from './../validator'
 import {connect} from "react-redux";
 
 
-class OwnOffersScreen extends Component{
+class viewOffersScreen extends Component{
     constructor(props) {
         super(props);
     
        
         this.state = {
           offers: [],
-          
+          modal: false
           
 
           
         };
-     
+        this.toggle = this.toggle.bind(this);
     }
 
     componentWillMount(){
-       
-        getOffers(this.props.user.user_id)
+       //console.log(this.props.post)
+        getPostOffers(this.props.post)
         .then(response=>{
             this.setState({offers:response.data})
          
@@ -39,13 +39,19 @@ class OwnOffersScreen extends Component{
        
       }
 
-      
+      toggle() {
+        this.setState(prevState => ({
+          modal: !prevState.modal
+        }));
+      }  
+
+
     render(){
 
         return(
-<div className="container-ownOffers" >
+<div className="container-ViewOffers" >
 
-<SupplierHomeScreen />
+<HomeScreen />
 
             
      <div className="row" >
@@ -58,11 +64,21 @@ class OwnOffersScreen extends Component{
          
            
             <div className="col-12 " style={{display: 'flex', justifyContent: 'center',marginTop: "3%",}} >
-                       
+            <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
+                                    
+                              
+                             <ModalFooter>
+                                <Button color="primary" onClick={{}}>Are you sure to confirm?</Button>{' '}
+                                <Button color="secondary" onClick={this.toggle}>Cancel</Button>
+                            </ModalFooter>
+                    </Modal>
                  <div className="col-8" style={{backgroundColor:'white'}}>
              
                  {this.state.offers.map((p,i)=>{
                                                 return (
+
+                    
+                                       
                     <CardGroup >
                         <Card value={p.user_id} key={i}>
                            
@@ -72,8 +88,8 @@ class OwnOffersScreen extends Component{
                             <CardSubtitle>Quantity Available: {p.quantityavailable}</CardSubtitle>
                             <CardText>Description: {p.description}</CardText>
                             <CardText>Pickup Zone: {p.pickupzones[i].description}</CardText>
-                            <CardText>State: {p.states[i].description}</CardText>
-                            
+                           
+                            <Link className="btn btn-primary"  onClick={this.toggle}>Confirm</Link>  
                             </CardBody>
                         </Card>
                         </CardGroup> 
@@ -81,6 +97,7 @@ class OwnOffersScreen extends Component{
                                                 )
                                               })
                     }
+                   
                 
                  </div>
             </div>
@@ -99,13 +116,15 @@ class OwnOffersScreen extends Component{
 }
 
 let mapStateToProps = state => {
-  
+    console.log(state.post)
       return {
           user: state.user,
-                    
+          post:state.post,         
       }
   }
 
 
   
-  export default connect(mapStateToProps)(OwnOffersScreen);
+  export default connect(mapStateToProps)(viewOffersScreen);
+
+  

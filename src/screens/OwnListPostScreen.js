@@ -7,45 +7,52 @@ import {Link} from 'react-router-dom'
 
 import axios from 'axios'
 import './../styles/style.css';
-import SupplierHomeScreen from './SupplierHomeScreen'
-import {getOffers}  from './../request'
+import HomeScreen from './HomeScreen'
+import {getOwnPost}  from './../request'
 
 import validator from './../validator'
 import {connect} from "react-redux";
 
 
-class OwnOffersScreen extends Component{
+class OwnListPostScreen extends Component{
     constructor(props) {
         super(props);
     
        
         this.state = {
-          offers: [],
-          
+          posts: [],
+         
           
 
           
         };
-     
+
+     this.renderRedirect=this.renderRedirect.bind(this);
     }
+    renderRedirect = (event) => {
+        this.props.setPostid(event.target.value);
+        
+          return this.props.history.push('/viewOffersScreen')
+        
+      }
 
     componentWillMount(){
-       
-        getOffers(this.props.user.user_id)
+
+        getOwnPost(this.props.user.user_id)
         .then(response=>{
-            this.setState({offers:response.data})
+            this.setState({posts:response.data})
          
         })
        
-      }
+}
 
       
     render(){
 
         return(
-<div className="container-ownOffers" >
+<div className="container-ownPost" >
 
-<SupplierHomeScreen />
+<HomeScreen />
 
             
      <div className="row" >
@@ -61,18 +68,21 @@ class OwnOffersScreen extends Component{
                        
                  <div className="col-8" style={{backgroundColor:'white'}}>
              
-                 {this.state.offers.map((p,i)=>{
+                 {this.state.posts.map((p,i)=>{
                                                 return (
                     <CardGroup >
                         <Card value={p.user_id} key={i}>
                            
                             <CardBody>
                             
+                            <CardBody>
+                            <CardTitle>Title: {p.title}</CardTitle>
                             <CardSubtitle>Price: {p.price}</CardSubtitle>
-                            <CardSubtitle>Quantity Available: {p.quantityavailable}</CardSubtitle>
+                            <CardSubtitle>Quantity: {p.quantity}</CardSubtitle>
                             <CardText>Description: {p.description}</CardText>
-                            <CardText>Pickup Zone: {p.pickupzones[i].description}</CardText>
-                            <CardText>State: {p.states[i].description}</CardText>
+                           
+                            <Button color="primary" onClick={this.renderRedirect} value={p.id}>View Offers</Button>
+                            </CardBody>
                             
                             </CardBody>
                         </Card>
@@ -99,13 +109,22 @@ class OwnOffersScreen extends Component{
 }
 
 let mapStateToProps = state => {
-  
+    console.log(state.post)
       return {
           user: state.user,
                     
       }
   }
-
+  
+  let mapDispatchToProps = (dispatch) => {
+    return {
+        setPostid: (data) => {
+            dispatch({type: 'SET_POST_ID', payload: data})
+        }
+    }
+  }
+  
+  
+  export default connect(mapStateToProps,mapDispatchToProps)(OwnListPostScreen);
 
   
-  export default connect(mapStateToProps)(OwnOffersScreen);

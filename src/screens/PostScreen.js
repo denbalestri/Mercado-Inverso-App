@@ -50,7 +50,7 @@ class PostScreen extends Component{
     }
 
     handlePostClick= () => {
-        console.log('aca post click')
+        
        
         axios.post(GET_POST + 'createPost', this.state.form)
         .then(response => {
@@ -65,7 +65,7 @@ class PostScreen extends Component{
               this.setState({ success: true });
               this.setState({ msg: 'The data could be saved!'}); 
               
-              console.log(response.data)
+              
             }
             
 
@@ -101,13 +101,12 @@ class PostScreen extends Component{
         
       this.setState({ error: false });
       
-       console.log(this.props.user.user_id)
-       console.log(this.state.form)
+       
         if(!validator.maxPrice(this.state.form.price)){
             this.setState({ modal: true });
             this.setState({ msg: "The price shouldn't be more than 999999"});
             this.setState({ error: true });
-            console.log('max price')
+            
             
         }
 
@@ -120,8 +119,7 @@ class PostScreen extends Component{
               this.setState({ error: true });
               this.setState({ modal: true });
               this.setState({ msg: 'Must have all the complete fields'});
-              console.log('error empty')
-              console.log(this.state.error)
+              
               
             }
             

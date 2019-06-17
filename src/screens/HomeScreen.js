@@ -63,7 +63,7 @@ class HomeScreen extends Component{
               <NavItem>
                 <NavLink 
                 style={{marginRight:'20px',color:'grey',lineHeight: '45px'}}
-                to="">Offers</NavLink>
+                to="/OwnListPostScreen">Posts</NavLink>
               </NavItem>
               <NavItem>
                 <NavLink 
@@ -102,7 +102,7 @@ class HomeScreen extends Component{
 }
 
 let mapStateToProps = state => {
-  console.log(state)
+  
    return {
        user: state.user
      

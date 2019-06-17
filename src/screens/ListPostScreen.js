@@ -43,7 +43,7 @@ class ListPostScreen extends Component{
       }
 
       handleSearchClick= () => {
-        console.log(this.state.searchPost)
+       
         axios.post(GET_POST + 'search', this.state.searchPost)
         .then(response => {
          this.setState({posts:response.data})
@@ -102,7 +102,7 @@ class ListPostScreen extends Component{
 
         renderRedirect = (event) => {
           this.props.setPostid(event.target.value);
-            //console.log(event.target.value);
+          
             return this.props.history.push('/MakeOfferScreen')
           
         }

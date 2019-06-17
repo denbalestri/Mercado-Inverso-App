@@ -43,8 +43,7 @@ class MakeOfferScreen extends Component{
     }
 
     handleOfferClick= () => {
-        console.log('aca offer click')
-       console.log(this.state.form)
+       
        
         axios.post(GET_OFFER + 'createOffer', this.state.form)
         .then(response => {
@@ -59,7 +58,7 @@ class MakeOfferScreen extends Component{
               this.setState({ success: true });
               this.setState({ msg: 'The data could be saved!'}); 
               this.setState({ msgerror: 'Well Done!'}); 
-              console.log(response.data)
+             
             }
             
 
@@ -94,12 +93,12 @@ class MakeOfferScreen extends Component{
 
         this.setState({ error: false });
 
-        console.log(this.state.form);
+       
         if(!validator.maxPrice(this.state.form.price)){
             this.setState({ modal: true });
             this.setState({ msg: "The price shouldn't be more than 999999"});
             this.setState({ error: true });
-            console.log('max price')
+            
             return;
         }
         Object.keys(this.state.form)
@@ -111,8 +110,7 @@ class MakeOfferScreen extends Component{
               this.setState({ error: true });
               this.setState({ modal: true });
               this.setState({ msg: 'Must have all the complete fields'});
-              console.log('error empty')
-              console.log(this.state.error)
+              
               
             }
             
