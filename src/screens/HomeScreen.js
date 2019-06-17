@@ -20,7 +20,7 @@ import PostScreen from './PostScreen'
 import OfferScreen from './MakeOfferScreen'
 import {connect} from "react-redux";
 import logo from './../Images/logo2.png';
-
+import firebase from './../firebase';
 class HomeScreen extends Component{
 
   constructor(props) {
@@ -30,7 +30,8 @@ class HomeScreen extends Component{
     this.state = {
       isOpen: false
     };
-   
+   this.toggle=this.toggle.bind(this);
+   this.signOut=this.signOut.bind(this);
   }
   toggle() {
     this.setState({
@@ -38,7 +39,15 @@ class HomeScreen extends Component{
     });
   }
   
+signOut(){
 
+  firebase.auth().signOut().then(()=> {
+   this.props.history.push('/')
+  this.props.user_signout();
+  }).catch(function(error) {
+    // An error happened.
+  });
+}
   
     render(){
     
@@ -68,23 +77,8 @@ class HomeScreen extends Component{
               <NavItem>
                 <NavLink 
                 style={{marginRight:'20px',color:'grey',lineHeight: '45px'}}
-                to="">Profile</NavLink>
+                onClick={this.signOut}>Sign out</NavLink>
               </NavItem>
-              <UncontrolledDropdown nav inNavbar>
-                <DropdownToggle nav caret>
-                  Options
-                </DropdownToggle>
-                <DropdownMenu right>
-                  <DropdownItem>
-                    Sign out
-                  </DropdownItem>
-                  <DropdownItem>
-                    Change password
-                  </DropdownItem>
-                  
-                  
-                </DropdownMenu>
-              </UncontrolledDropdown>
             </Nav>
           </Collapse>
         </Navbar>
@@ -108,7 +102,20 @@ let mapStateToProps = state => {
      
    }
 }
+let mapDispatchToProps = (dispatch) => {
+  return {
+      user_signout: () => {
+          dispatch({type: 'USER_LOGOUT'})
+      }
+  }
+}
 
 
-export default connect(mapStateToProps)(HomeScreen);
+
+
+
+
+export default connect(mapStateToProps,mapDispatchToProps)(HomeScreen);
+
+
 

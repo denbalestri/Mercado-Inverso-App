@@ -14,6 +14,7 @@ import validator from './../validator'
 import {connect} from "react-redux";
 import imageCard from './../Images/ImageCard.jpg';
 import {getPickupZone}  from './../request'
+import {PENDING} from '../constants/states'
 class MakeOfferScreen extends Component{
     constructor(props) {
         super(props);
@@ -28,7 +29,7 @@ class MakeOfferScreen extends Component{
                 quantityavailable:'',
                 post_id:'',
                 pickupzone_id:'',
-                state:'1',
+                state:PENDING,
              },
              pickupzones:[],
              modal:false,

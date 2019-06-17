@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import { Button, Card, CardImg, CardTitle, CardText, CardGroup,
-    CardSubtitle, CardBody, Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
+    CardSubtitle, CardBody, Modal, ModalHeader, ModalBody, ModalFooter,Alert} from 'reactstrap';
 
 import {Link} from 'react-router-dom'
 
@@ -9,9 +9,11 @@ import axios from 'axios'
 import './../styles/style.css';
 import HomeScreen from './HomeScreen'
 import {getPostOffers}  from './../request'
-
+import {GET_OFFER} from '../constants/Endpoints'
+import {CONFIRMED} from '../constants/states'
 import validator from './../validator'
 import {connect} from "react-redux";
+
 
 
 class viewOffersScreen extends Component{
@@ -20,17 +22,30 @@ class viewOffersScreen extends Component{
     
        
         this.state = {
-          offers: [],
-          modal: false
           
-
+          form:{
+          offer_id:'',
+          state:CONFIRMED,
+          post_id:'',
+          user_id:'',
+          },
+          offers: [],
+          modal: false,
+          visible: false
           
         };
         this.toggle = this.toggle.bind(this);
+        this.handleConfirmClick = this.handleConfirmClick.bind(this);
+        this.setOffer = this.setOffer.bind(this);
+        this.onDismiss = this.onDismiss.bind(this);
+    }
+
+    onDismiss() {
+      this.setState({ visible: false });
     }
 
     componentWillMount(){
-       //console.log(this.props.post)
+       
         getPostOffers(this.props.post)
         .then(response=>{
             this.setState({offers:response.data})
@@ -39,11 +54,42 @@ class viewOffersScreen extends Component{
        
       }
 
-      toggle() {
-        this.setState(prevState => ({
-          modal: !prevState.modal
+      toggle = (event) =>  {
+       
+       
+        this.setOffer(event);
+       this.setState(prevState => ({
+          modal: !prevState.modal,
+          
+         
         }));
-      }  
+      }
+      
+      setOffer(event){
+        this.setState({
+          form:{
+            ...this.state.form,
+           offer_id:event.target.value,
+           post_id:this.props.post,
+           user_id:this.props.user.user_id
+        }
+      })
+    }
+
+      handleConfirmClick= () => {
+       
+        this.setState(prevState => ({
+          modal: !prevState.modal,
+          
+         
+        }));
+        axios.post(GET_OFFER + 'confirm',this.state.form)
+         .then(response => {
+        
+          this.setState({ visible: true });
+        })
+        .catch(error => console.log("Error:", error));
+      }
 
 
     render(){
@@ -64,16 +110,21 @@ class viewOffersScreen extends Component{
          
            
             <div className="col-12 " style={{display: 'flex', justifyContent: 'center',marginTop: "3%",}} >
+           
             <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
                                     
                               
                              <ModalFooter>
-                                <Button color="primary" onClick={{}}>Are you sure to confirm?</Button>{' '}
+                                <Button color="primary" onClick={this.handleConfirmClick}>Are you sure to confirm?</Button>{' '}
                                 <Button color="secondary" onClick={this.toggle}>Cancel</Button>
                             </ModalFooter>
                     </Modal>
+
+                   
                  <div className="col-8" style={{backgroundColor:'white'}}>
-             
+                 <Alert color="success" isOpen={this.state.visible} toggle={this.onDismiss}>
+                      Offer Confirmed! 
+                   </Alert>
                  {this.state.offers.map((p,i)=>{
                                                 return (
 
@@ -89,7 +140,7 @@ class viewOffersScreen extends Component{
                             <CardText>Description: {p.description}</CardText>
                             <CardText>Pickup Zone: {p.pickupzones[i].description}</CardText>
                            
-                            <Link className="btn btn-primary"  onClick={this.toggle}>Confirm</Link>  
+                            <Button color="primary"  onClick={this.toggle} value={p.id}>Confirm</Button>  
                             </CardBody>
                         </Card>
                         </CardGroup> 
