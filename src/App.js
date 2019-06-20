@@ -11,6 +11,7 @@ import MakeOfferScreen from './screens/MakeOfferScreen'
 import OwnOffersScreen from './screens/OwnOffersScreen'
 import OwnListPostScreen from './screens/OwnListPostScreen'
 import viewOffersScreen from './screens/viewOffersScreen'
+import OffersConfirmedScreen from './screens/OffersConfirmedScreen'
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
     
@@ -31,6 +32,7 @@ function App() {
     <Route path="/OwnOffersScreen" component={OwnOffersScreen}/>
     <Route path="/OwnListPostScreen" component={OwnListPostScreen}/>
     <Route path="/viewOffersScreen" component={viewOffersScreen}/>
+    <Route path="/OffersConfirmedScreen" component={OffersConfirmedScreen}/>
     </Router>
    
    

@@ -25,13 +25,14 @@ class viewOffersScreen extends Component{
           
           form:{
           offer_id:'',
-          state:CONFIRMED,
+          state:'',
           post_id:'',
           user_id:'',
           },
           offers: [],
           modal: false,
-          visible: false
+          visible: false,
+          empty:false
           
         };
         this.toggle = this.toggle.bind(this);
@@ -51,6 +52,9 @@ class viewOffersScreen extends Component{
             this.setState({offers:response.data})
          
         })
+        if(validator.EmptyFields(this.state.offers)){
+          this.setState({empty:true})
+      }
        
       }
 
@@ -99,6 +103,10 @@ class viewOffersScreen extends Component{
 
 <HomeScreen />
 
+<div className="col-8 " style={{display: 'flex', justifyContent: 'center',marginTop: "10%",textAlign:'center',marginLeft:'15%'}}>
+<Alert color="info" style={{display: this.state.empty ? 'none' : 'block' ,}}>
+                    you don't have offers
+                </Alert></div>
             
      <div className="row" >
     

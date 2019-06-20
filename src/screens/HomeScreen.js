@@ -77,6 +77,11 @@ signOut(){
               <NavItem>
                 <NavLink 
                 style={{marginRight:'20px',color:'grey',lineHeight: '45px'}}
+                to="/OffersConfirmedScreen">Offers Confirmed</NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink 
+                style={{marginRight:'20px',color:'grey',lineHeight: '45px'}}
                 onClick={this.signOut}>Sign out</NavLink>
               </NavItem>
             </Nav>

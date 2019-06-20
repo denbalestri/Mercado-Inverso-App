@@ -7,6 +7,7 @@ const endpoints={
     category:'http:///localhost:3001/category',
     pickupzone:'http:///localhost:3001/pickupzone',
     offers:'http:///localhost:3001/offer',
+    offersConfirmed:'http:///localhost:3001/offer/confirmed',
     ownPost:'http://localhost:3001/posts/OwnPost',
     postOffer:'http:///localhost:3001/offer/postOffer',
 }
@@ -35,6 +36,9 @@ function getPosts(){
 function getOffers(user_id){
     return axios.post(endpoints.offers,{user_id:user_id})
 }
+function getOffersConfirmed(user_id){
+    return axios.post(endpoints.offersConfirmed,{user_id:user_id})
+}
 function getPickupZone(){
     return axios.get(endpoints.pickupzone)
 
@@ -43,7 +47,7 @@ function getPickupZone(){
 
 module.exports={
 
-    getRols,getCategories,getPosts,getPickupZone,getOffers,getOwnPost,getPostOffers
+    getRols,getCategories,getPosts,getPickupZone,getOffers,getOwnPost,getPostOffers,getOffersConfirmed
 }
 
 

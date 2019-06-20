@@ -36,6 +36,7 @@ class MakeOfferScreen extends Component{
              error:false,
              msg:'',
              msgerror:'Oups! something was wrong',
+             success:false,
         };
         this.handleInputChange = this.handleInputChange.bind(this);
         this.validateBeforeSubmit=this.validateBeforeSubmit.bind(this);
@@ -58,7 +59,8 @@ class MakeOfferScreen extends Component{
             else{
               this.setState({ success: true });
               this.setState({ msg: 'The data could be saved!'}); 
-              this.setState({ msgerror: 'Well Done!'}); 
+              this.setState({ msgerror: 'Well Done!'});
+               
              
             }
             
