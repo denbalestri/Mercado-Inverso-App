@@ -26,7 +26,7 @@ class OwnOffersScreen extends Component{
 
           
         };
-     
+     this.getOffer=this.getOffer.bind(this);
     }
 
     componentWillMount(){
@@ -34,9 +34,12 @@ class OwnOffersScreen extends Component{
         getOffers(this.props.user.user_id)
         .then(response=>{
             this.setState({offers:response.data})
-         
+        
         })
        
+      }
+      getOffer(){
+          console.log(this.state.offers)
       }
 
       
@@ -71,15 +74,15 @@ class OwnOffersScreen extends Component{
                             <CardSubtitle>Price: {p.price}</CardSubtitle>
                             <CardSubtitle>Quantity Available: {p.quantityavailable}</CardSubtitle>
                             <CardText>Description: {p.description}</CardText>
-                            <CardText>Pickup Zone: {p.pickupzones[i].description}</CardText>
-                            <CardText>State: {p.states[i].description}</CardText>
-                            
+                            <CardText>Pickup Zone: {p.pickupzones[0].description}</CardText>
+                            <CardText>State: {p.states[0].description}</CardText>
+                            <Link onClick={this.getOffer}> VER OFERTA</Link>
                             </CardBody>
                         </Card>
                         </CardGroup> 
                                               
-                                                )
-                                              })
+                      )
+                 })
                     }
                 
                  </div>

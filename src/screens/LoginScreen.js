@@ -125,7 +125,7 @@ class LoginScreen extends Component{
             
             <div className="col-12 " style={{display: 'flex', justifyContent: 'center',marginTop: "10%",}} >
            
-                 <div className="col-6" style={{backgroundColor:'white'}}>
+                 <div className="col-6" style={{backgroundColor:'white',borderRadius: "25px;"}}>
                  <img src={logo} alt="Logo" style={{width: '250px',margin:'0 auto',display:'block'}} />
                  
 
@@ -152,9 +152,9 @@ class LoginScreen extends Component{
                         </FormGroup>
                     
                     
-                    <Link className="btn btn-primary" onClick={this.handleLoginClick} style={{display: this.state.loading ? 'none' : 'inline-block',width: '150px'}}>Login</Link>
-                    <Link className="btn btn-primary" to="/RegisterScreen" style={{display: this.state.loading ? 'none' : 'inline-block',marginLeft:'4%',width: '150px'}}>Sign up</Link>
-                    <Spinner  color="primary" style={{display: this.state.loading ? 'block' : 'none',margin:' 0 auto'}}/>
+                    <Link className="btn btn-primary" onClick={this.handleLoginClick} style={{display: this.state.loading ? 'none' : 'inline-block',width: '150px',marginBottom:"10px"}}>Login</Link>
+                    <Link className="btn btn-primary" to="/RegisterScreen" style={{display: this.state.loading ? 'none' : 'inline-block',marginLeft:'4%',width: '150px',marginBottom:"10px"}}>Sign up</Link>
+                    <Spinner  color="primary" style={{display: this.state.loading ? 'block' : 'none',margin:' 0 auto',marginBottom:"10px"}}/>
                     
                 </Form>
              </div>

@@ -52,11 +52,14 @@ class viewOffersScreen extends Component{
             this.setState({offers:response.data})
          
         })
-        if(validator.EmptyFields(this.state.offers)){
+        if(this.state.offers==""){
           this.setState({empty:true})
+      
+         
       }
        
       }
+
 
       toggle = (event) =>  {
        
@@ -104,8 +107,8 @@ class viewOffersScreen extends Component{
 <HomeScreen />
 
 <div className="col-8 " style={{display: 'flex', justifyContent: 'center',marginTop: "10%",textAlign:'center',marginLeft:'15%'}}>
-<Alert color="info" style={{display: this.state.empty ? 'none' : 'block' ,}}>
-                    you don't have offers
+<Alert color="info" style={{display: this.state.empty ? 'block' : 'none' ,}}>
+                    you don't have offers yet
                 </Alert></div>
             
      <div className="row" >
@@ -146,7 +149,7 @@ class viewOffersScreen extends Component{
                             <CardSubtitle>Price: {p.price}</CardSubtitle>
                             <CardSubtitle>Quantity Available: {p.quantityavailable}</CardSubtitle>
                             <CardText>Description: {p.description}</CardText>
-                            <CardText>Pickup Zone: {p.pickupzones[i].description}</CardText>
+                            <CardText>Pickup Zone: {p.pickupzones[0].description}</CardText>
                            
                             <Button color="primary"  onClick={this.toggle} value={p.id}>Confirm</Button>  
                             </CardBody>

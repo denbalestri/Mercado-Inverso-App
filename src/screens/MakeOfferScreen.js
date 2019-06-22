@@ -207,7 +207,7 @@ class MakeOfferScreen extends Component{
                                     );      
                                       </Input>
                                     </FormGroup>
-                        <Link className="btn btn-primary"  onClick={this.validateBeforeSubmit}>Make a offer</Link>              
+                        <Link className="btn btn-primary"  style={{marginBottom:"10px"}}   onClick={this.validateBeforeSubmit}>Make a offer</Link>              
                
             </div>
         </div>

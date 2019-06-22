@@ -188,7 +188,7 @@ class PostScreen extends Component{
                                   </ModalFooter>
                           </Modal>
 
-                    <FormGroup>
+                    <FormGroup style={{marginTop:"5%"}}>
                     <Label for="title">Title</Label>
                     <Input  
                     name="title"
@@ -204,6 +204,7 @@ class PostScreen extends Component{
                     name="description" 
                     id="description"
                     placeholder="Description..."
+                    style={{height:"120px"}}
                     onChange={this.handleInputChange} />
                     </FormGroup>
                     
@@ -215,9 +216,9 @@ class PostScreen extends Component{
                    
                 </Form>
                 </div>
-                <div className="col-md-4" style={{ textAlign: "center" ,backgroundColor:'white'}}>
-                <Form>
-                <FormGroup>
+                <div className="col-md-4" style={{ textAlign: "center" ,backgroundColor:'white',}}>
+                <Form >
+                <FormGroup style={{marginTop:"5%"}}>
                     <Label for="quantity">Quantity</Label>
                     <Input
                         type="number"
@@ -251,7 +252,7 @@ class PostScreen extends Component{
                         placeholder="Price..."
                     />
                     </FormGroup>
-                    <Link className="btn btn-primary"  onClick={this.validateBeforeSubmit}>Post</Link>   
+                    <Link className="btn btn-primary" style={{marginBottom:"10px"}} onClick={this.validateBeforeSubmit}>Post</Link>   
                 </Form>
                 </div>
                
