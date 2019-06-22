@@ -108,7 +108,7 @@ class viewOffersScreen extends Component{
 
 <div className="col-8 " style={{display: 'flex', justifyContent: 'center',marginTop: "10%",textAlign:'center',marginLeft:'15%'}}>
 <Alert color="info" style={{display: this.state.empty ? 'block' : 'none' ,}}>
-                    you don't have offers yet
+                    You don't have offers yet
                 </Alert></div>
             
      <div className="row" >
