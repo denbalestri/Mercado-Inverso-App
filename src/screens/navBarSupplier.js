@@ -47,7 +47,7 @@ class navBarSupplier extends Component{
   firebase.auth().signOut()
     .then(()=> {
     this.props.user_signout();
-    
+   
    
     })
     .catch(function(error) {
