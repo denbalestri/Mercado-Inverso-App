@@ -12,6 +12,8 @@ import OwnOffersScreen from './screens/OwnOffersScreen'
 import OwnListPostScreen from './screens/OwnListPostScreen'
 import viewOffersScreen from './screens/viewOffersScreen'
 import OffersConfirmedScreen from './screens/OffersConfirmedScreen'
+import navBarTrader from './screens/navBarTrader'
+import navBarSupplier from './screens/navBarSupplier'
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
     
@@ -21,7 +23,7 @@ function App() {
      //ALL SCREENS 
     
      
-      <Router>
+      <Router >
     <Route path="/" exact component={LoginScreen}/>
     <Route path="/RegisterScreen" component={RegisterScreen}/>
     <Route path="/HomeScreen" component={HomeScreen}/>
@@ -33,6 +35,8 @@ function App() {
     <Route path="/OwnListPostScreen" component={OwnListPostScreen}/>
     <Route path="/viewOffersScreen" component={viewOffersScreen}/>
     <Route path="/OffersConfirmedScreen" component={OffersConfirmedScreen}/>
+    <Route path="/navBarTrader" component={navBarTrader}/>
+    <Route path="/navBarSupplier" component={navBarSupplier}/>
     </Router>
    
    

@@ -34,15 +34,15 @@ let store = createStore(function (state = initialData, action) {
             }
         }
         if (action.type === 'USER_LOGOUT') {
-            console.log('aca')
+           
             state = {
                 appTitle: 'Mercado Inverso',
                 user:{},
                 post:{}
             }
+          
           }
-        //console.log(action.payload)
-        console.log(state)
+       
        
     
    

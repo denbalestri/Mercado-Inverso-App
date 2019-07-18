@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react';
 import { Button, Form, FormGroup,Alert, Label, Input, FormText,FormFeedback ,Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
-import {Link} from 'react-router-dom'
+import {Link,Route,Redirect} from 'react-router-dom'
 import '../styles/style.css';
 import {getRols}  from './../request'
 import {GET_USER} from '../constants/Endpoints'
@@ -10,6 +10,7 @@ import firebase from './../firebase';
 import { functionTypeAnnotation } from '@babel/types';
 import validator from './../validator'
 import './../styles/style.css'
+import LoginScreen from './LoginScreen';
 class RegisterScreen extends Component{
 
 
@@ -53,7 +54,7 @@ class RegisterScreen extends Component{
 
     handleRegisterClick = () => {
      //console.log(this.state.form)
-      this.setState({error:''});
+      this.setState({error:false});
       this.setState({wrongPassword:false})
           
             axios.post(GET_USER + 'create', this.state.form)
@@ -78,6 +79,12 @@ class RegisterScreen extends Component{
                             this.setState({RegisterSuccess:true})
 
                             //return this.props.history.push('/')
+                      }).then(()=>{
+                        setTimeout(function(){
+                         
+                         return  this.props.history.push("/")
+
+                        },4000);
                       })
                       )
                     .catch(error=>{
@@ -107,7 +114,7 @@ class RegisterScreen extends Component{
       e.preventDefault();
      // console.log(this.state.form)
       
-     
+     this.setState({error:false});
       if(!validator.min(this.state.form.password)){
         
          this.setState({
@@ -150,19 +157,21 @@ class RegisterScreen extends Component{
              this.setState({wrongPassword:true})
              this.setState({ okayPassword: false });
              this.setState({ error: true });
+           
              
              return;
       }
      else if(validator.Equals(this.state.form.password,this.state.form.repeatpassword) && !validator.min(this.state.form.password)){
         this.setState({ okayPassword: true });
         this.setState({wrongPassword:false})
-      
+        
         return;
       }
      if(this.state.form.email===''){
       this.setState({ error: true });
       this.setState({ msg: 'The Email is invalid!'});
       this.setState({ modal: true });
+      
   
       return;
      }
@@ -181,7 +190,7 @@ class RegisterScreen extends Component{
 
           })
 
-          this.setState({error:false})
+          
          
         
          if(this.state.error===false){
@@ -291,7 +300,7 @@ class RegisterScreen extends Component{
 
 
                          
-                                    <FormGroup>
+                                    <FormGroup style={{marginTop:"5%"}}>
                                       <Label for="firstName">First Name</Label>
                                       <Input
                                         type="nombre"
@@ -322,7 +331,7 @@ class RegisterScreen extends Component{
                                             </FormGroup>
 
 
-                                    <FormGroup>
+                                    <FormGroup style={{marginBottom:"15%"}}>
                                       <Label for="select">Rol</Label>
                                       <Input type="select" name="rol" id="rol" onChange={this.handleInputChange} value={this.state.form.rol}>
                                       <option value={0} key={0} defaultValue>Choose a rol</option>
@@ -345,7 +354,7 @@ class RegisterScreen extends Component{
                                
 
 
-                                    <FormGroup>
+                                    <FormGroup style={{marginTop:"5%"}}>
                                       <Label for="email">Email</Label>
                                       <Input
                                         name="email"
@@ -398,21 +407,21 @@ class RegisterScreen extends Component{
                                         placeholder="password..."
                                       />
                                     </FormGroup>
-
-
-
-
                                    
-                                    <div ><Link className="btn btn-primary"  onClick={this.validateBeforeSubmit}>Register</Link></div>       
                              
                           </Form>
-                          </div>
-                          
-                          
-                        </div>
 
-                        </div>
-                   </div>
+                          <div className="col-12">
+                          <Link className="btn btn-primary" style={{marginTop:"7%",width:'40%'}} onClick={this.validateBeforeSubmit}>Register</Link> 
+                          </div>      
+                      </div>
+                          
+                          
+                  </div>
+
+              </div>
+                        
+        </div>
 
         )}
 

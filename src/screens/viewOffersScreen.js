@@ -7,7 +7,7 @@ import {Link} from 'react-router-dom'
 
 import axios from 'axios'
 import './../styles/style.css';
-import HomeScreen from './HomeScreen'
+import NavBarTrader from './navBarTrader'
 import {getPostOffers}  from './../request'
 import {GET_OFFER} from '../constants/Endpoints'
 import {CONFIRMED} from '../constants/states'
@@ -50,13 +50,13 @@ class viewOffersScreen extends Component{
         getPostOffers(this.props.post)
         .then(response=>{
             this.setState({offers:response.data})
-         
+            if(this.state.offers==""){
+              this.setState({empty:true})
+                
+             
+          }
         })
-        if(this.state.offers==""){
-          this.setState({empty:true})
-      
-         
-      }
+       
        
       }
 
@@ -104,7 +104,7 @@ class viewOffersScreen extends Component{
         return(
 <div className="container-ViewOffers" >
 
-<HomeScreen />
+<NavBarTrader />
 
 <div className="col-8 " style={{display: 'flex', justifyContent: 'center',marginTop: "10%",textAlign:'center',marginLeft:'15%'}}>
 <Alert color="info" style={{display: this.state.empty ? 'block' : 'none' ,}}>

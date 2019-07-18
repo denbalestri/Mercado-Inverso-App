@@ -1,120 +1,124 @@
 import React, { Component } from 'react';
 
-import { Collapse,
-  Navbar,
-  NavbarToggler,
-  NavbarBrand,
-  Nav,
-  NavItem,
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem} from 'reactstrap';
+import {
+  Carousel,
+  CarouselItem,
+  CarouselControl,
+  CarouselIndicators,
+  CarouselCaption
+} from 'reactstrap';
 
-import {Link,NavLink} from 'react-router-dom'
+import {Link,NavLink,Redirect} from 'react-router-dom'
 
 
 import axios from 'axios'
 import './../styles/style.css';
-import PostScreen from './PostScreen'
-import OfferScreen from './MakeOfferScreen'
 import {connect} from "react-redux";
-import logo from './../Images/logo2.png';
 import firebase from './../firebase';
+import NavBarSupplier from './navBarSupplier'
+
+const items = [
+  {
+    src: 'https://upload.wikimedia.org/wikipedia/commons/f/f9/PedidosYa.jpg',
+    
+    
+  },
+  {
+    src: 'https://www.infobip.com/assets/uploads/blog/pets-and-go-Converted-02.jpg',
+   
+  },
+  {
+    src: 'http://www.agitacion.org/wp-content/uploads/2019/05/Glovo.jpg',
+   
+  }
+];
 class SupplierHomeScreen extends Component{
 
   constructor(props) {
     super(props);
-
-    this.toggle = this.toggle.bind(this);
-    this.state = {
-      isOpen: false
-    };
-    this.toggle=this.toggle.bind(this);
-    this.signOut=this.signOut.bind(this);
-  }
-  toggle() {
-    this.setState({
-      isOpen: !this.state.isOpen
-    });
-  }
-  signOut(){
-
-    firebase.auth().signOut().then(()=> {
-    this.props.history.push('/')
-    this.props.user_signout();
-    }).catch(function(error) {
-      // An error happened.
-    });
+    this.state={
+      
+      user_id:'',
+    }
+    this.state = { activeIndex: 0 };
+    this.next = this.next.bind(this);
+    this.previous = this.previous.bind(this);
+    this.goToIndex = this.goToIndex.bind(this);
+    this.onExiting = this.onExiting.bind(this);
+    this.onExited = this.onExited.bind(this);
+    
   }
 
+
+    
+  onExiting() {
+    this.animating = true;
+  }
+
+  onExited() {
+    this.animating = false;
+  }
+
+  next() {
+    if (this.animating) return;
+    const nextIndex = this.state.activeIndex === items.length - 1 ? 0 : this.state.activeIndex + 1;
+    this.setState({ activeIndex: nextIndex });
+  }
+
+  previous() {
+    if (this.animating) return;
+    const nextIndex = this.state.activeIndex === 0 ? items.length - 1 : this.state.activeIndex - 1;
+    this.setState({ activeIndex: nextIndex });
+  }
+
+  goToIndex(newIndex) {
+    if (this.animating) return;
+    this.setState({ activeIndex: newIndex });
+  }
   
     render(){
-    
-        return(
    
-    <div className="container">
+      
 
-         
-       <Navbar color="light" light expand="md">
-       <img src={logo} alt="Logo" style={{width: '100px',margin:'0 auto',display:'block'}} />
-          
-          <NavbarToggler onClick={this.toggle} />
-          <Collapse isOpen={this.state.isOpen} navbar>
-            <Nav className="ml-auto" navbar>
-              
-              <NavItem>
-                <NavLink 
-                style={{marginRight:'20px',color:'grey',lineHeight: '45px'}}
-                to="/ListPostScreen">Posts</NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink 
-                style={{marginRight:'20px',color:'grey',lineHeight: '45px'}}
-                to="/OwnOffersScreen">Offers</NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink 
-                style={{marginRight:'20px',color:'grey',lineHeight: '45px'}}
-                onClick={this.signOut}>Sign out</NavLink>
-              </NavItem>
-            </Nav>
-          </Collapse>
-        </Navbar>
+       
+    
+      const { activeIndex } = this.state;
 
-
-                        
-         
+      const slides = items.map((item) => {
+        return (
         
-        
-  </div>
+              <CarouselItem
+                onExiting={this.onExiting}
+                onExited={this.onExited}
+                key={item.src}
 
-        )
+              >
+                <img src={item.src} alt={item.altText} style={{width:'40%',display: 'block',marginLeft:'auto',marginRight:'auto',marginTop:'3%'}} />
+                <CarouselCaption captionText={item.caption} captionHeader={item.caption} />
+              </CarouselItem>
+           
+        );
+
+      });
+  
+      return (
+        <div className="container-home"> 
+        <NavBarSupplier/>
+        
+        <Carousel
+          activeIndex={activeIndex}
+          next={this.next}
+          previous={this.previous}
+        >
+          <CarouselIndicators items={items} activeIndex={activeIndex} onClickHandler={this.goToIndex} />
+          {slides}
+          <CarouselControl direction="prev" directionText="Previous" onClickHandler={this.previous} />
+          <CarouselControl direction="next" directionText="Next" onClickHandler={this.next} />
+        </Carousel>
+        </div>
+      );
     }
-
-}
-
-let mapStateToProps = state => {
-  console.log(state)
-   return {
-       user: state.user
-     
-   }
-}
-
-let mapDispatchToProps = (dispatch) => {
-  return {
-      user_signout: () => {
-          dispatch({type: 'USER_LOGOUT'})
-      }
   }
-}
+  
 
-
-
-
-
-
-
-
-export default connect(mapStateToProps,mapDispatchToProps)(SupplierHomeScreen);
+  export default SupplierHomeScreen;

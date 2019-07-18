@@ -6,7 +6,7 @@ import {Link} from 'react-router-dom'
 import {GET_POST} from '../constants/Endpoints'
 import axios from 'axios'
 import './../styles/style.css';
-import HomeScreen from './HomeScreen'
+import NavBarTrader from './navBarTrader'
 import {getCategories}  from './../request'
 import validator from './../validator'
 import {connect} from "react-redux";
@@ -18,31 +18,32 @@ const styles = {
     textAlign: 'center',
     display: 'flex',
   };
+ 
 class PostScreen extends Component{
     constructor(props) {
         super(props);
        
         this.state = {
-            //isLoading: false,
-            form: {
-                 quantity: "", 
-                 price: "" ,
-                 title:"",
-                 category:"",
-                 user_id:"",
-                 description:"",
-                 
-                
-                },
-            msg: '',
-            modal:false,
-            loading:false,
-            category:[],
-            postValid:true,
-            error:true,
-            success:''
-            
-        };
+          form: {
+            quantity: "", 
+            price: "" ,
+            title:"",
+            category:"",
+            user_id:"",
+            description:"",
+        
+       
+              },
+       msg: '',
+       modal:false,
+       loading:false,
+       category:[],
+       postValid:true,
+       error:false,
+       success:'',
+       msgHeader:''
+      }
+        
         this.toggle = this.toggle.bind(this);
         this.handlePostClick = this.handlePostClick.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
@@ -60,12 +61,16 @@ class PostScreen extends Component{
               this.setState({ error: true });
               this.setState({ modal: true });
               this.setState({ msg: 'Could not save the data please try again'});
+              this.setState({msgHeader:'Ops! Something was wrong'})
             }
             else{
               this.setState({ success: true });
               this.setState({ msg: 'The data could be saved!'}); 
-              
-              
+              this.setState({msgHeader:'Yeeeh! Well done'})
+              this.setState({ modal: true });
+              setTimeout(function(){
+                window.location.reload();
+              },2000);
             }
             
 
@@ -115,10 +120,11 @@ class PostScreen extends Component{
         .map(key =>{
 
             if(validator.EmptyFields(this.state.form[key])) {
-             
+             if(![key]==='Quantity'){
               this.setState({ error: true });
               this.setState({ modal: true });
               this.setState({ msg: 'Must have all the complete fields'});
+             }
               
               
             }
@@ -127,7 +133,7 @@ class PostScreen extends Component{
           })
 
          
-          
+          console.log(this.state.error);
         if(this.state.error===false){
           this.handlePostClick();
         } 
@@ -161,12 +167,10 @@ class PostScreen extends Component{
 
         return(
     <div  className="container-post">
-    <HomeScreen />
+    <NavBarTrader />
  
         <div className="row" >
-        <UncontrolledAlert color="success" style={{margin:'0 auto',width:'75%',display: this.state.success ? 'block' : 'none'}}>
-                   {this.state.msg}
-              </UncontrolledAlert>
+     
             <div className="col-12" style={{display: 'flex', justifyContent: 'center',marginTop: "12%"}} >
               
                  <div className="col-md-4" style={{ textAlign: "center" ,backgroundColor:'white'}}>
@@ -178,7 +182,7 @@ class PostScreen extends Component{
                     <Form>
 
                     <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
-                                  <ModalHeader toggle={this.toggle}>Oups! something was wrong</ModalHeader>
+                                  <ModalHeader toggle={this.toggle}>{this.state.msgHeader}</ModalHeader>
                                   <ModalBody>
                                   {this.state.msg}
                                   </ModalBody>
@@ -243,7 +247,7 @@ class PostScreen extends Component{
                         </Input>
                         </FormGroup>
                         <FormGroup>
-                    <Label for="exampleNumber">Price</Label>
+                    <Label for="exampleNumber">Price by unit</Label>
                     <Input
                         type="number"
                         name="price"
@@ -252,7 +256,7 @@ class PostScreen extends Component{
                         placeholder="Price..."
                     />
                     </FormGroup>
-                    <Link className="btn btn-primary" style={{marginBottom:"10px"}} onClick={this.validateBeforeSubmit}>Post</Link>   
+                    <Link className="btn btn-primary" style={{marginBottom:"10px",width:'30%'}} onClick={this.validateBeforeSubmit}>Post</Link>   
                 </Form>
                 </div>
                

@@ -7,7 +7,7 @@ import {Link} from 'react-router-dom'
 
 import axios from 'axios'
 import './../styles/style.css';
-import SupplierHomeScreen from './SupplierHomeScreen'
+import SupplierHomeScreen from './navBarSupplier'
 import {getPosts,getCategories}  from './../request'
 import {GET_OFFER} from '../constants/Endpoints'
 import validator from './../validator'
@@ -58,9 +58,12 @@ class MakeOfferScreen extends Component{
             }
             else{
               this.setState({ success: true });
+              this.setState({ modal: true });
               this.setState({ msg: 'The data could be saved!'}); 
               this.setState({ msgerror: 'Well Done!'});
-               
+              setTimeout(function(){
+                window.location.reload();
+              },2000);
              
             }
             
@@ -171,7 +174,7 @@ class MakeOfferScreen extends Component{
                                   </ModalFooter>
                           </Modal>
 
-                <FormGroup >
+                <FormGroup style={{marginTop:"5%"}}>
                 <Label for="description" >Description</Label>
                 <Col sm={12}>
                     <Input type="textarea" name="description" id="description" onChange={this.handleInputChange} />
@@ -183,7 +186,7 @@ class MakeOfferScreen extends Component{
                 </FormGroup>
             </div>
                 <div className="col-md-4" style={{ textAlign: "center" ,backgroundColor:'white'}}>
-                        <FormGroup>
+                        <FormGroup style={{marginTop:"5%"}}>
                         
                             <Label for="">Quantity Available</Label>
                             <Input

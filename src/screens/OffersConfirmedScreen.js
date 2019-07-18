@@ -7,7 +7,7 @@ import {Link} from 'react-router-dom'
 
 import axios from 'axios'
 import './../styles/style.css';
-import HomeScreen from './HomeScreen'
+import NavBarTrader from './navBarTrader'
 import {getOffersConfirmed}  from './../request'
 import {GET_OFFER} from '../constants/Endpoints'
 import validator from './../validator'
@@ -51,13 +51,14 @@ class OffersConfirmedScreen extends Component{
         getOffersConfirmed(this.props.user.user_id)
         .then(response=>{
             this.setState({offersConfirmed:response.data})
+            if(this.state.offersConfirmed==""){
+              this.setState({empty:true})
+                
+             
+          }
          
         })
-        if(this.state.offersConfirmed==""){
-            this.setState({empty:true})
-          
-            
-        }
+       
        
 }
 
@@ -146,7 +147,7 @@ cancelOffer(){
 
 <div className="container-offersConfirmed" >
 
-<HomeScreen />
+<NavBarTrader />
 
 <div className="col-8 " style={{display: 'flex', justifyContent: 'center',marginTop: "10%",textAlign:'center',marginLeft:'15%'}}>
 <Alert color="info" style={{display: this.state.empty ? 'block' : 'none' ,}}>
@@ -164,11 +165,11 @@ cancelOffer(){
            
             <div className="col-12 " style={{display: 'flex', justifyContent: 'center',marginTop: "3%",}} >
             <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
-                                    
+            <ModalBody>Are you sure to cancel?</ModalBody>
                               
                                     <ModalFooter>
-                                       <Button color="primary" onClick={this.validateBeforeSubmit}>Are you sure to cancel?</Button>{' '}
-                                       <Button color="secondary" onClick={this.toggle}>Cancel</Button>
+                                       <Button color="primary" onClick={this.validateBeforeSubmit}>Yes</Button>{' '}
+                                       <Button color="secondary" onClick={this.toggle}>No</Button>
                                    </ModalFooter>
                   </Modal>
                   <Modal isOpen={this.state.modalerror} toggle={this.toggleError} className={this.props.className}>

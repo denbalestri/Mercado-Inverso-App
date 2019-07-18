@@ -7,7 +7,7 @@ import {Link} from 'react-router-dom'
 
 import axios from 'axios'
 import './../styles/style.css';
-import SupplierHomeScreen from './SupplierHomeScreen'
+import NavBarSupplier from './navBarSupplier'
 import {getPosts,getCategories}  from './../request'
 import {GET_POST} from '../constants/Endpoints'
 import validator from './../validator'
@@ -23,7 +23,7 @@ class ListPostScreen extends Component{
         this.state = {
 
           searchPost:{
-
+          user:'',
           search:'',
           categorySelected:''
           },
@@ -40,6 +40,7 @@ class ListPostScreen extends Component{
         this.handleCategoriesInput=this.handleCategoriesInput.bind(this);
         this.handleSearchClick=this.handleSearchClick.bind(this);
         this.renderRedirect=this.renderRedirect.bind(this);
+       
       }
 
       handleSearchClick= () => {
@@ -106,14 +107,15 @@ class ListPostScreen extends Component{
             return this.props.history.push('/MakeOfferScreen')
           
         }
-     
+        
+        
 
       render(){
 
         return(
 <div className="container-listPost" >
 
-<SupplierHomeScreen />
+<NavBarSupplier/>
 
             
      <div className="row" >
@@ -182,6 +184,16 @@ class ListPostScreen extends Component{
       }
 
 }
+
+
+let mapStateToProps = state => {
+ 
+  return {
+      user: state.user
+    
+  }
+}
+
 let mapDispatchToProps = (dispatch) => {
   return {
       setPostid: (data) => {
@@ -191,4 +203,4 @@ let mapDispatchToProps = (dispatch) => {
 }
 
 
-export default connect(null,mapDispatchToProps)(ListPostScreen);
+export default connect(mapStateToProps,mapDispatchToProps)(ListPostScreen);

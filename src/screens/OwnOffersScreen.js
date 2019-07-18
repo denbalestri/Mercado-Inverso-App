@@ -7,11 +7,12 @@ import {Link} from 'react-router-dom'
 
 import axios from 'axios'
 import './../styles/style.css';
-import SupplierHomeScreen from './SupplierHomeScreen'
+import NavBarSupplier from './navBarSupplier'
 import {getOffers}  from './../request'
 
 import validator from './../validator'
 import {connect} from "react-redux";
+import navBarSupplier from './navBarSupplier';
 
 
 class OwnOffersScreen extends Component{
@@ -39,7 +40,7 @@ class OwnOffersScreen extends Component{
        
       }
       getOffer(){
-          console.log(this.state.offers)
+          //console.log(this.state.offers)
       }
 
       
@@ -48,7 +49,7 @@ class OwnOffersScreen extends Component{
         return(
 <div className="container-ownOffers" >
 
-<SupplierHomeScreen />
+<NavBarSupplier />
 
             
      <div className="row" >
@@ -76,7 +77,7 @@ class OwnOffersScreen extends Component{
                             <CardText>Description: {p.description}</CardText>
                             <CardText>Pickup Zone: {p.pickupzones[0].description}</CardText>
                             <CardText>State: {p.states[0].description}</CardText>
-                            <Link onClick={this.getOffer}> VER OFERTA</Link>
+                            
                             </CardBody>
                         </Card>
                         </CardGroup> 

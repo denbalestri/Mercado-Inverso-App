@@ -7,7 +7,7 @@ import {Link} from 'react-router-dom'
 
 import axios from 'axios'
 import './../styles/style.css';
-import HomeScreen from './HomeScreen'
+import NavBarTrader from './navBarTrader'
 import {getOwnPost}  from './../request'
 
 import validator from './../validator'
@@ -57,9 +57,9 @@ class OwnListPostScreen extends Component{
         return(
 <div className="container-ownPost" >
 
-<HomeScreen />
+<NavBarTrader />
 <div className="col-8 " style={{display: 'flex', justifyContent: 'center',marginTop: "10%",textAlign:'center',marginLeft:'15%'}}>
-<Alert color="info" style={{display: this.state.empty ? 'block' : 'none' ,}}>
+<Alert color="info" style={{display: this.state.empty ? 'none' : 'block' ,}}>
                     You don't have posts yet
                 </Alert></div>
             
