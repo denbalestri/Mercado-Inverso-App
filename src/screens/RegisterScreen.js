@@ -79,12 +79,6 @@ class RegisterScreen extends Component{
                             this.setState({RegisterSuccess:true})
 
                             //return this.props.history.push('/')
-                      }).then(()=>{
-                        setTimeout(function(){
-                         
-                         return  this.props.history.push("/")
-
-                        },4000);
                       })
                       )
                     .catch(error=>{
